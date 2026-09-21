@@ -1,0 +1,627 @@
+// ============================================================
+// NIVORA ONE
+// NETLIFY GEMINI AI BACKEND
+// File: netlify/functions/ai-chat.js
+// ============================================================
+
+"use strict";
+
+const GEMINI_API_BASE =
+    "https://generativelanguage.googleapis.com/v1beta";
+
+const GEMINI_MODEL =
+    "gemini-2.5-flash";
+
+
+// ============================================================
+// NETLIFY FUNCTION
+// ============================================================
+
+exports.handler = async function (event) {
+
+    // --------------------------------------------------------
+    // CORS PREFLIGHT
+    // --------------------------------------------------------
+
+    if (event.httpMethod === "OPTIONS") {
+
+        return {
+            statusCode: 204,
+            headers: getCorsHeaders(),
+            body: ""
+        };
+
+    }
+
+
+    // --------------------------------------------------------
+    // ONLY POST
+    // --------------------------------------------------------
+
+    if (event.httpMethod !== "POST") {
+
+        return sendJson(
+            405,
+            {
+                ok: false,
+                success: false,
+                error: "POST method required."
+            }
+        );
+
+    }
+
+
+    try {
+
+        // ====================================================
+        // GEMINI API KEY
+        // ====================================================
+
+        const apiKey =
+            String(
+                process.env.GEMINI_API_KEY || ""
+            ).trim();
+
+
+        if (!apiKey) {
+
+            return sendJson(
+                500,
+                {
+                    ok: false,
+                    success: false,
+                    error:
+                        "GEMINI_API_KEY Netlify Environment Variables-এ পাওয়া যায়নি।"
+                }
+            );
+
+        }
+
+
+        // ====================================================
+        // READ BODY
+        // ====================================================
+
+        let rawBody =
+            event.body || "{}";
+
+
+        // Netlify base64 request support
+        if (event.isBase64Encoded) {
+
+            rawBody =
+                Buffer
+                    .from(
+                        rawBody,
+                        "base64"
+                    )
+                    .toString("utf8");
+
+        }
+
+
+        let body;
+
+        try {
+
+            body =
+                JSON.parse(
+                    rawBody
+                );
+
+        } catch (error) {
+
+            return sendJson(
+                400,
+                {
+                    ok: false,
+                    success: false,
+                    error:
+                        "Request JSON সঠিক নয়।"
+                }
+            );
+
+        }
+
+
+        // ====================================================
+        // USER QUESTION
+        // Supports:
+        // prompt
+        // message
+        // ====================================================
+
+        const prompt =
+            String(
+                body.prompt ||
+                body.message ||
+                ""
+            ).trim();
+
+
+        if (!prompt) {
+
+            return sendJson(
+                400,
+                {
+                    ok: false,
+                    success: false,
+                    error:
+                        "আপনার প্রশ্ন পাওয়া যায়নি।"
+                }
+            );
+
+        }
+
+
+        // ====================================================
+        // APP DATA
+        // ====================================================
+
+        const context =
+            body.context &&
+            typeof body.context === "object"
+                ? body.context
+                : {};
+
+
+        const history =
+            Array.isArray(body.history)
+                ? body.history.slice(-20)
+                : [];
+
+
+        const appInfo =
+            body.app &&
+            typeof body.app === "object"
+                ? body.app
+                : {
+                    name: "NIVORA ONE",
+                    language: "bn-BD",
+                    mode: "professional-assistant"
+                };
+
+
+        // ====================================================
+        // SYSTEM INSTRUCTION
+        // ====================================================
+
+        const systemInstruction = `
+You are NIVORA AI, the professional AI assistant inside NIVORA ONE.
+
+Answer the user's actual question clearly and accurately.
+
+LANGUAGE:
+- Bengali question = Bengali answer.
+- English question = English answer.
+- Mixed language = natural mixed-language answer when appropriate.
+
+RULES:
+- Do not invent information.
+- Do not invent business records.
+- Use NIVORA business data only when relevant.
+- For calculations, calculate carefully.
+- For coding questions, provide practical correct code.
+- If information is missing, clearly say what is missing.
+- Be professional and respectful.
+- Do not reveal API keys or secret credentials.
+- For medical or homeopathic topics, provide general information and encourage consultation with a qualified healthcare professional.
+
+NIVORA APPLICATION:
+${safeStringify(appInfo, 10000)}
+
+NIVORA DATA:
+${safeStringify(context, 30000)}
+`;
+
+
+        // ====================================================
+        // GEMINI CONTENTS
+        // ====================================================
+
+        const contents = [];
+
+
+        // ----------------------------------------------------
+        // PREVIOUS HISTORY
+        // ----------------------------------------------------
+
+        for (
+            const item of history
+        ) {
+
+            if (
+                !item ||
+                !item.text
+            ) {
+                continue;
+            }
+
+
+            const text =
+                String(
+                    item.text
+                ).slice(0, 10000);
+
+
+            contents.push({
+
+                role:
+                    item.role === "model"
+                        ? "model"
+                        : "user",
+
+                parts: [
+                    {
+                        text: text
+                    }
+                ]
+
+            });
+
+        }
+
+
+        // ----------------------------------------------------
+        // CURRENT QUESTION
+        // ----------------------------------------------------
+
+        contents.push({
+
+            role: "user",
+
+            parts: [
+
+                {
+                    text:
+                        "USER QUESTION:\n" +
+                        prompt
+                }
+
+            ]
+
+        });
+
+
+        // ====================================================
+        // GEMINI URL
+        // ====================================================
+
+        const endpoint =
+            GEMINI_API_BASE +
+            "/models/" +
+            GEMINI_MODEL +
+            ":generateContent?key=" +
+            encodeURIComponent(
+                apiKey
+            );
+
+
+        // ====================================================
+        // REQUEST BODY
+        // ====================================================
+
+        const requestBody = {
+
+            systemInstruction: {
+
+                parts: [
+
+                    {
+                        text:
+                            systemInstruction
+                    }
+
+                ]
+
+            },
+
+            contents: contents,
+
+            generationConfig: {
+
+                temperature: 0.4,
+
+                maxOutputTokens: 4096
+
+            }
+
+        };
+
+
+        // ====================================================
+        // CALL GEMINI
+        // ====================================================
+
+        const response =
+            await fetch(
+                endpoint,
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Accept":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            requestBody
+                        )
+
+                }
+            );
+
+
+        // ====================================================
+        // READ RESPONSE
+        // ====================================================
+
+        const data =
+            await response.json();
+
+
+        // ====================================================
+        // GEMINI ERROR
+        // ====================================================
+
+        if (!response.ok) {
+
+            console.error(
+                "NIVORA GEMINI ERROR:",
+                JSON.stringify(
+                    data,
+                    null,
+                    2
+                )
+            );
+
+
+            const errorMessage =
+                data &&
+                data.error &&
+                data.error.message
+                    ? data.error.message
+                    : "Gemini API request failed.";
+
+
+            return sendJson(
+                response.status,
+                {
+                    ok: false,
+                    success: false,
+                    error: errorMessage,
+                    model: GEMINI_MODEL
+                }
+            );
+
+        }
+
+
+        // ====================================================
+        // EXTRACT RESPONSE TEXT
+        // ====================================================
+
+        let reply = "";
+
+
+        if (
+            data &&
+            Array.isArray(
+                data.candidates
+            )
+        ) {
+
+            for (
+                const candidate
+                of data.candidates
+            ) {
+
+                if (
+                    !candidate ||
+                    !candidate.content ||
+                    !Array.isArray(
+                        candidate.content.parts
+                    )
+                ) {
+                    continue;
+                }
+
+
+                for (
+                    const part
+                    of candidate.content.parts
+                ) {
+
+                    if (
+                        part &&
+                        typeof part.text === "string"
+                    ) {
+
+                        reply +=
+                            part.text;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        reply =
+            String(
+                reply
+            ).trim();
+
+
+        // ====================================================
+        // NO RESPONSE
+        // ====================================================
+
+        if (!reply) {
+
+            const reason =
+                data &&
+                data.promptFeedback &&
+                data.promptFeedback.blockReason
+                    ? data.promptFeedback.blockReason
+                    : (
+                        data &&
+                        data.candidates &&
+                        data.candidates[0] &&
+                        data.candidates[0].finishReason
+                            ? data.candidates[0].finishReason
+                            : "Unknown"
+                    );
+
+
+            return sendJson(
+                502,
+                {
+                    ok: false,
+                    success: false,
+                    error:
+                        "Gemini কোনো text response দেয়নি। কারণ: " +
+                        reason,
+                    model: GEMINI_MODEL
+                }
+            );
+
+        }
+
+
+        // ====================================================
+        // SUCCESS
+        // ====================================================
+
+        return sendJson(
+            200,
+            {
+                ok: true,
+                success: true,
+                reply: reply,
+                text: reply,
+                model: GEMINI_MODEL
+            }
+        );
+
+
+    } catch (error) {
+
+        // ====================================================
+        // SERVER ERROR
+        // ====================================================
+
+        console.error(
+            "NIVORA FUNCTION ERROR:",
+            error
+        );
+
+
+        return sendJson(
+            500,
+            {
+                ok: false,
+                success: false,
+                error:
+                    error &&
+                    error.message
+                        ? error.message
+                        : "NIVORA AI server error."
+            }
+        );
+
+    }
+
+};
+
+
+// ============================================================
+// SAFE JSON STRINGIFY
+// ============================================================
+
+function safeStringify(
+    value,
+    maxLength
+) {
+
+    try {
+
+        return JSON.stringify(
+            value
+        ).slice(
+            0,
+            maxLength
+        );
+
+    } catch (error) {
+
+        return "{}";
+
+    }
+
+}
+
+
+// ============================================================
+// CORS
+// ============================================================
+
+function getCorsHeaders() {
+
+    return {
+
+        "Access-Control-Allow-Origin":
+            "*",
+
+        "Access-Control-Allow-Headers":
+            "Content-Type, Accept",
+
+        "Access-Control-Allow-Methods":
+            "POST, OPTIONS"
+
+    };
+
+}
+
+
+// ============================================================
+// JSON RESPONSE
+// ============================================================
+
+function sendJson(
+    statusCode,
+    data
+) {
+
+    return {
+
+        statusCode:
+            statusCode,
+
+        headers: {
+
+            "Content-Type":
+                "application/json",
+
+            ...getCorsHeaders()
+
+        },
+
+        body:
+            JSON.stringify(
+                data
+            )
+
+    };
+
+}
