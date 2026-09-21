@@ -1,0 +1,12 @@
+{
+  "name": "nivora-one",
+  "version": "2.0.0",
+  "private": true,
+  "description": "NIVORA ONE - All-in-One Professional AI System",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
