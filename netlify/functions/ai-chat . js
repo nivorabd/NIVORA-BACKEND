@@ -1,627 +1,295 @@
-// ============================================================
-// NIVORA ONE
-// NETLIFY GEMINI AI BACKEND
-// File: netlify/functions/ai-chat.js
-// ============================================================
-
-"use strict";
-
-const GEMINI_API_BASE =
-    "https://generativelanguage.googleapis.com/v1beta";
-
-const GEMINI_MODEL =
-    "gemini-2.5-flash";
-
-
-// ============================================================
-// NETLIFY FUNCTION
-// ============================================================
-
 exports.handler = async function (event) {
+    const headers = {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "POST, OPTIONS"
+    };
 
-    // --------------------------------------------------------
-    // CORS PREFLIGHT
-    // --------------------------------------------------------
-
+    // CORS preflight
     if (event.httpMethod === "OPTIONS") {
-
         return {
             statusCode: 204,
-            headers: getCorsHeaders(),
+            headers,
             body: ""
         };
-
     }
 
-
-    // --------------------------------------------------------
-    // ONLY POST
-    // --------------------------------------------------------
-
+    // Only POST is allowed
     if (event.httpMethod !== "POST") {
-
-        return sendJson(
-            405,
-            {
+        return {
+            statusCode: 405,
+            headers,
+            body: JSON.stringify({
                 ok: false,
-                success: false,
-                error: "POST method required."
-            }
-        );
-
+                error: "Method Not Allowed. Use POST."
+            })
+        };
     }
-
 
     try {
-
-        // ====================================================
-        // GEMINI API KEY
-        // ====================================================
-
-        const apiKey =
-            String(
-                process.env.GEMINI_API_KEY || ""
-            ).trim();
-
-
-        if (!apiKey) {
-
-            return sendJson(
-                500,
-                {
-                    ok: false,
-                    success: false,
-                    error:
-                        "GEMINI_API_KEY Netlify Environment Variables-এ পাওয়া যায়নি।"
-                }
-            );
-
-        }
-
-
-        // ====================================================
-        // READ BODY
-        // ====================================================
-
-        let rawBody =
-            event.body || "{}";
-
-
-        // Netlify base64 request support
-        if (event.isBase64Encoded) {
-
-            rawBody =
-                Buffer
-                    .from(
-                        rawBody,
-                        "base64"
-                    )
-                    .toString("utf8");
-
-        }
-
-
-        let body;
+        // -----------------------------
+        // 1. Read request
+        // -----------------------------
+        let body = {};
 
         try {
-
-            body =
-                JSON.parse(
-                    rawBody
-                );
-
+            body = JSON.parse(event.body || "{}");
         } catch (error) {
-
-            return sendJson(
-                400,
-                {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({
                     ok: false,
-                    success: false,
-                    error:
-                        "Request JSON সঠিক নয়।"
-                }
-            );
-
+                    error: "Invalid JSON request."
+                })
+            };
         }
-
-
-        // ====================================================
-        // USER QUESTION
-        // Supports:
-        // prompt
-        // message
-        // ====================================================
 
         const prompt =
-            String(
-                body.prompt ||
-                body.message ||
-                ""
-            ).trim();
-
-
-        if (!prompt) {
-
-            return sendJson(
-                400,
-                {
-                    ok: false,
-                    success: false,
-                    error:
-                        "আপনার প্রশ্ন পাওয়া যায়নি।"
-                }
-            );
-
-        }
-
-
-        // ====================================================
-        // APP DATA
-        // ====================================================
-
-        const context =
-            body.context &&
-            typeof body.context === "object"
-                ? body.context
-                : {};
-
+            typeof body.prompt === "string"
+                ? body.prompt.trim()
+                : "";
 
         const history =
             Array.isArray(body.history)
-                ? body.history.slice(-20)
+                ? body.history
                 : [];
 
+        const context =
+            body.context && typeof body.context === "object"
+                ? body.context
+                : {};
 
         const appInfo =
-            body.app &&
-            typeof body.app === "object"
+            body.app && typeof body.app === "object"
                 ? body.app
-                : {
-                    name: "NIVORA ONE",
-                    language: "bn-BD",
-                    mode: "professional-assistant"
-                };
+                : {};
 
+        // -----------------------------
+        // 2. Validate prompt
+        // -----------------------------
+        if (!prompt) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({
+                    ok: false,
+                    error: "Prompt is required."
+                })
+            };
+        }
 
-        // ====================================================
-        // SYSTEM INSTRUCTION
-        // ====================================================
+        // -----------------------------
+        // 3. Read Netlify environment
+        // -----------------------------
+        const apiKey = process.env.GEMINI_API_KEY;
 
-        const systemInstruction = `
-You are NIVORA AI, the professional AI assistant inside NIVORA ONE.
+        const model =
+            process.env.GEMINI_MODEL ||
+            "gemini-2.5-flash";
 
-Answer the user's actual question clearly and accurately.
+        if (!apiKey) {
+            return {
+                statusCode: 500,
+                headers,
+                body: JSON.stringify({
+                    ok: false,
+                    error: "GEMINI_API_KEY is not configured in Netlify."
+                })
+            };
+        }
 
-LANGUAGE:
-- Bengali question = Bengali answer.
-- English question = English answer.
-- Mixed language = natural mixed-language answer when appropriate.
-
-RULES:
-- Do not invent information.
-- Do not invent business records.
-- Use NIVORA business data only when relevant.
-- For calculations, calculate carefully.
-- For coding questions, provide practical correct code.
-- If information is missing, clearly say what is missing.
-- Be professional and respectful.
-- Do not reveal API keys or secret credentials.
-- For medical or homeopathic topics, provide general information and encourage consultation with a qualified healthcare professional.
-
-NIVORA APPLICATION:
-${safeStringify(appInfo, 10000)}
-
-NIVORA DATA:
-${safeStringify(context, 30000)}
-`;
-
-
-        // ====================================================
-        // GEMINI CONTENTS
-        // ====================================================
-
+        // -----------------------------
+        // 4. Build conversation
+        // -----------------------------
         const contents = [];
 
-
-        // ----------------------------------------------------
-        // PREVIOUS HISTORY
-        // ----------------------------------------------------
-
-        for (
-            const item of history
-        ) {
-
-            if (
-                !item ||
-                !item.text
-            ) {
-                continue;
-            }
-
-
-            const text =
-                String(
-                    item.text
-                ).slice(0, 10000);
-
-
-            contents.push({
-
-                role:
-                    item.role === "model"
-                        ? "model"
-                        : "user",
-
-                parts: [
-                    {
-                        text: text
-                    }
-                ]
-
-            });
-
-        }
-
-
-        // ----------------------------------------------------
-        // CURRENT QUESTION
-        // ----------------------------------------------------
-
-        contents.push({
-
-            role: "user",
-
-            parts: [
-
-                {
-                    text:
-                        "USER QUESTION:\n" +
-                        prompt
-                }
-
-            ]
-
-        });
-
-
-        // ====================================================
-        // GEMINI URL
-        // ====================================================
-
-        const endpoint =
-            GEMINI_API_BASE +
-            "/models/" +
-            GEMINI_MODEL +
-            ":generateContent?key=" +
-            encodeURIComponent(
-                apiKey
-            );
-
-
-        // ====================================================
-        // REQUEST BODY
-        // ====================================================
-
-        const requestBody = {
-
-            systemInstruction: {
-
-                parts: [
-
-                    {
-                        text:
-                            systemInstruction
-                    }
-
-                ]
-
-            },
-
-            contents: contents,
-
-            generationConfig: {
-
-                temperature: 0.4,
-
-                maxOutputTokens: 4096
-
-            }
-
-        };
-
-
-        // ====================================================
-        // CALL GEMINI
-        // ====================================================
-
-        const response =
-            await fetch(
-                endpoint,
-                {
-
-                    method: "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json",
-
-                        "Accept":
-                            "application/json"
-
-                    },
-
-                    body:
-                        JSON.stringify(
-                            requestBody
-                        )
-
-                }
-            );
-
-
-        // ====================================================
-        // READ RESPONSE
-        // ====================================================
-
-        const data =
-            await response.json();
-
-
-        // ====================================================
-        // GEMINI ERROR
-        // ====================================================
-
-        if (!response.ok) {
-
-            console.error(
-                "NIVORA GEMINI ERROR:",
-                JSON.stringify(
-                    data,
-                    null,
-                    2
-                )
-            );
-
-
-            const errorMessage =
-                data &&
-                data.error &&
-                data.error.message
-                    ? data.error.message
-                    : "Gemini API request failed.";
-
-
-            return sendJson(
-                response.status,
-                {
-                    ok: false,
-                    success: false,
-                    error: errorMessage,
-                    model: GEMINI_MODEL
-                }
-            );
-
-        }
-
-
-        // ====================================================
-        // EXTRACT RESPONSE TEXT
-        // ====================================================
-
-        let reply = "";
-
-
-        if (
-            data &&
-            Array.isArray(
-                data.candidates
-            )
-        ) {
-
-            for (
-                const candidate
-                of data.candidates
-            ) {
-
-                if (
-                    !candidate ||
-                    !candidate.content ||
-                    !Array.isArray(
-                        candidate.content.parts
-                    )
-                ) {
+        if (history.length > 0) {
+            for (const item of history) {
+                if (!item || typeof item !== "object") {
                     continue;
                 }
 
+                const role =
+                    item.role === "assistant"
+                        ? "model"
+                        : "user";
 
-                for (
-                    const part
-                    of candidate.content.parts
-                ) {
+                let text = "";
 
-                    if (
-                        part &&
-                        typeof part.text === "string"
-                    ) {
-
-                        reply +=
-                            part.text;
-
-                    }
-
+                if (typeof item.content === "string") {
+                    text = item.content;
+                } else if (typeof item.text === "string") {
+                    text = item.text;
                 }
 
+                if (text.trim()) {
+                    contents.push({
+                        role,
+                        parts: [
+                            {
+                                text: text.trim()
+                            }
+                        ]
+                    });
+                }
             }
-
         }
 
+        // -----------------------------
+        // 5. NIVORA system instruction
+        // -----------------------------
+        const systemInstruction = `
+You are NIVORA AI, the professional AI assistant inside NIVORA ONE.
 
-        reply =
-            String(
-                reply
-            ).trim();
+Your primary communication languages are Bengali and English.
 
+Language rules:
+- If the user asks in Bengali, answer naturally in Bengali.
+- If the user asks in English, answer in English.
+- If the user uses Banglish, understand the meaning and respond naturally.
+- Do not unnecessarily switch languages.
 
-        // ====================================================
-        // NO RESPONSE
-        // ====================================================
+Behavior:
+- Be accurate, practical, clear and professional.
+- Do not invent business records, financial records, customer records, stock records or medical records.
+- When NIVORA ONE provides application data, use that data as the source of truth.
+- If required information is missing, clearly say that it is missing instead of making it up.
+- For calculations, show the important steps when useful.
+- For business questions, distinguish between actual stored data and general advice.
+- Keep answers easy to understand on a mobile phone.
+- Do not claim that an action was completed unless the application actually completed it.
 
-        if (!reply) {
+Application:
+${JSON.stringify(appInfo)}
 
-            const reason =
-                data &&
-                data.promptFeedback &&
-                data.promptFeedback.blockReason
-                    ? data.promptFeedback.blockReason
-                    : (
-                        data &&
-                        data.candidates &&
-                        data.candidates[0] &&
-                        data.candidates[0].finishReason
-                            ? data.candidates[0].finishReason
-                            : "Unknown"
-                    );
+Available application context:
+${JSON.stringify(context)}
+`;
 
-
-            return sendJson(
-                502,
+        // -----------------------------
+        // 6. Add current user message
+        // -----------------------------
+        contents.push({
+            role: "user",
+            parts: [
                 {
-                    ok: false,
-                    success: false,
-                    error:
-                        "Gemini কোনো text response দেয়নি। কারণ: " +
-                        reason,
-                    model: GEMINI_MODEL
+                    text: prompt
                 }
-            );
+            ]
+        });
 
+        // -----------------------------
+        // 7. Gemini API request
+        // -----------------------------
+        const apiUrl =
+            "https://generativelanguage.googleapis.com/v1beta/models/" +
+            encodeURIComponent(model) +
+            ":generateContent?key=" +
+            encodeURIComponent(apiKey);
+
+        const geminiResponse = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                systemInstruction: {
+                    parts: [
+                        {
+                            text: systemInstruction
+                        }
+                    ]
+                },
+                contents,
+                generationConfig: {
+                    temperature: 0.4,
+                    maxOutputTokens: 4096
+                }
+            })
+        });
+
+        // -----------------------------
+        // 8. Read Gemini response
+        // -----------------------------
+        const responseText = await geminiResponse.text();
+
+        let data;
+
+        try {
+            data = JSON.parse(responseText);
+        } catch (error) {
+            data = {
+                raw: responseText
+            };
         }
 
+        if (!geminiResponse.ok) {
+            return {
+                statusCode: geminiResponse.status,
+                headers,
+                body: JSON.stringify({
+                    ok: false,
+                    error:
+                        data?.error?.message ||
+                        "Gemini API request failed.",
+                    details: data
+                })
+            };
+        }
 
-        // ====================================================
-        // SUCCESS
-        // ====================================================
+        // -----------------------------
+        // 9. Extract answer
+        // -----------------------------
+        const answer =
+            data?.candidates?.[0]?.content?.parts
+                ?.map(part =>
+                    typeof part.text === "string"
+                        ? part.text
+                        : ""
+                )
+                .join("")
+                .trim();
 
-        return sendJson(
-            200,
-            {
+        if (!answer) {
+            return {
+                statusCode: 502,
+                headers,
+                body: JSON.stringify({
+                    ok: false,
+                    error: "Gemini returned no usable answer.",
+                    details: data
+                })
+            };
+        }
+
+        // -----------------------------
+        // 10. Success
+        // -----------------------------
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
                 ok: true,
-                success: true,
-                reply: reply,
-                text: reply,
-                model: GEMINI_MODEL
-            }
-        );
-
+                answer,
+                model,
+                service: "NIVORA ONE AI"
+            })
+        };
 
     } catch (error) {
+        console.error("NIVORA AI ERROR:", error);
 
-        // ====================================================
-        // SERVER ERROR
-        // ====================================================
-
-        console.error(
-            "NIVORA FUNCTION ERROR:",
-            error
-        );
-
-
-        return sendJson(
-            500,
-            {
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({
                 ok: false,
-                success: false,
                 error:
-                    error &&
-                    error.message
-                        ? error.message
-                        : "NIVORA AI server error."
-            }
-        );
-
+                    error?.message ||
+                    "Unexpected server error."
+            })
+        };
     }
-
 };
-
-
-// ============================================================
-// SAFE JSON STRINGIFY
-// ============================================================
-
-function safeStringify(
-    value,
-    maxLength
-) {
-
-    try {
-
-        return JSON.stringify(
-            value
-        ).slice(
-            0,
-            maxLength
-        );
-
-    } catch (error) {
-
-        return "{}";
-
-    }
-
-}
-
-
-// ============================================================
-// CORS
-// ============================================================
-
-function getCorsHeaders() {
-
-    return {
-
-        "Access-Control-Allow-Origin":
-            "*",
-
-        "Access-Control-Allow-Headers":
-            "Content-Type, Accept",
-
-        "Access-Control-Allow-Methods":
-            "POST, OPTIONS"
-
-    };
-
-}
-
-
-// ============================================================
-// JSON RESPONSE
-// ============================================================
-
-function sendJson(
-    statusCode,
-    data
-) {
-
-    return {
-
-        statusCode:
-            statusCode,
-
-        headers: {
-
-            "Content-Type":
-                "application/json",
-
-            ...getCorsHeaders()
-
-        },
-
-        body:
-            JSON.stringify(
-                data
-            )
-
-    };
-
-}
