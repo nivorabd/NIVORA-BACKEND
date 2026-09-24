@@ -1,0 +1,3677 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NIVORA ONE - All-in-One Professional System & Hub</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans Bengali"', '"Hind Siliguri"', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts for Bengali -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- GLOBAL CSS -->
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden; background-color: #030712; color: #f3f4f6; font-family: 'Noto Sans Bengali', 'Hind Siliguri', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+        :root { --header-height: 70px; --bottom-nav-height: 75px; }
+        .main-content-wrapper { padding-top: var(--header-height); padding-bottom: calc(var(--bottom-nav-height) + 20px); min-height: 100vh; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+        .glass-panel { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .transition-smooth { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+<!-- =========================================
+     NIVORA ONE - FIREBASE CONNECTION
+     ========================================= -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+    import { getStorage } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBiu3pj9P3MpY6d0juL1-pfCarkrI2eZ54",
+        authDomain: "taskearn-bd-fa040.firebaseapp.com",
+        projectId: "taskearn-bd-fa040",
+        storageBucket: "taskearn-bd-fa040.firebasestorage.app",
+        messagingSenderId: "177026495081",
+        appId: "1:177026495081:web:48bfaaf8e2e7688e3e68f8",
+        measurementId: "G-RDSLSLBP0Q"
+    };
+
+    try {
+        const firebaseApp = initializeApp(firebaseConfig);
+
+        window.NIVORA_FIREBASE = {
+            app: firebaseApp,
+            auth: getAuth(firebaseApp),
+            db: getFirestore(firebaseApp),
+            storage: getStorage(firebaseApp)
+        };
+
+        console.log("NIVORA Firebase connected successfully");
+    } catch (error) {
+        console.error("NIVORA Firebase connection error:", error);
+    }
+</script>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased">
+<!-- =====================================================
+     NIVORA ONE - FIREBASE LOGIN / CREATE ACCOUNT
+     ===================================================== -->
+<div id="nivora-auth-screen"
+     class="fixed inset-0 z-[9999] bg-slate-950 flex items-center justify-center p-4 overflow-y-auto">
+
+    <div class="w-full max-w-md">
+
+        <!-- Logo -->
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 mx-auto rounded-2xl
+                        bg-gradient-to-tr from-green-600 to-emerald-400
+                        flex items-center justify-center
+                        text-white text-2xl shadow-lg shadow-green-600/30">
+                <i class="fa-solid fa-cube"></i>
+            </div>
+
+            <h1 class="text-2xl font-bold text-white mt-3">
+                NIVORA ONE
+            </h1>
+
+            <p class="text-sm text-slate-400">
+                All-in-One Professional Hub
+            </p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="glass-panel rounded-3xl p-5 sm:p-6">
+
+            <!-- Login -->
+            <div id="nivora-login-form">
+
+                <h2 class="text-xl font-bold text-white mb-1">
+                    Login করুন
+                </h2>
+
+                <p class="text-sm text-slate-400 mb-5">
+                    আপনার NIVORA ONE অ্যাকাউন্টে প্রবেশ করুন
+                </p>
+
+                <div class="space-y-3">
+
+                    <input
+                        id="nivora-login-email"
+                        type="email"
+                        autocomplete="email"
+                        placeholder="Email Address"
+                        class="w-full bg-slate-950 border border-slate-800
+                               rounded-xl px-4 py-3 text-sm text-white
+                               outline-none focus:border-green-500">
+
+                    <input
+                        id="nivora-login-password"
+                        type="password"
+                        autocomplete="current-password"
+                        placeholder="Password"
+                        class="w-full bg-slate-950 border border-slate-800
+                               rounded-xl px-4 py-3 text-sm text-white
+                               outline-none focus:border-green-500">
+
+                    <button
+                        type="button"
+                        onclick="nivoraFirebaseLogin()"
+                        id="nivora-login-btn"
+                        class="w-full bg-green-600 hover:bg-green-500
+                               text-white font-bold py-3 rounded-xl transition">
+                        <i class="fa-solid fa-right-to-bracket mr-2"></i>
+                        Login
+                    </button>
+
+                </div>
+
+                <div id="nivora-login-message"
+                     class="hidden mt-4 rounded-xl px-3 py-3 text-sm">
+                </div>
+
+                <div class="text-center mt-5">
+                    <p class="text-sm text-slate-400">
+                        নতুন অ্যাকাউন্ট নেই?
+                    </p>
+
+                    <button
+                        type="button"
+                        onclick="nivoraShowRegister()"
+                        class="mt-2 text-green-400 hover:text-green-300
+                               font-bold text-sm">
+                        Create New Account
+                    </button>
+                </div>
+
+            </div>
+
+
+            <!-- Register -->
+            <div id="nivora-register-form" class="hidden">
+
+                <h2 class="text-xl font-bold text-white mb-1">
+                    Create New Account
+                </h2>
+
+                <p class="text-sm text-slate-400 mb-5">
+                    নতুন NIVORA ONE অ্যাকাউন্ট তৈরি করুন
+                </p>
+
+                <div class="space-y-3">
+
+                    <input
+                        id="nivora-register-name"
+                        type="text"
+                        autocomplete="name"
+                        placeholder="আপনার নাম"
+                        class="w-full bg-slate-950 border border-slate-800
+                               rounded-xl px-4 py-3 text-sm text-white
+                               outline-none focus:border-green-500">
+
+                    <input
+                        id="nivora-register-email"
+                        type="email"
+                        autocomplete="email"
+                        placeholder="Email Address"
+                        class="w-full bg-slate-950 border border-slate-800
+                               rounded-xl px-4 py-3 text-sm text-white
+                               outline-none focus:border-green-500">
+
+                    <input
+                        id="nivora-register-password"
+                        type="password"
+                        autocomplete="new-password"
+                        placeholder="Password (কমপক্ষে ৬ অক্ষর)"
+                        class="w-full bg-slate-950 border border-slate-800
+                               rounded-xl px-4 py-3 text-sm text-white
+                               outline-none focus:border-green-500">
+
+                    <input
+                        id="nivora-register-password2"
+                        type="password"
+                        autocomplete="new-password"
+                        placeholder="Password আবার লিখুন"
+                        class="w-full bg-slate-950 border border-slate-800
+                               rounded-xl px-4 py-3 text-sm text-white
+                               outline-none focus:border-green-500">
+
+                    <button
+                        type="button"
+                        onclick="nivoraFirebaseRegister()"
+                        id="nivora-register-btn"
+                        class="w-full bg-green-600 hover:bg-green-500
+                               text-white font-bold py-3 rounded-xl transition">
+                        <i class="fa-solid fa-user-plus mr-2"></i>
+                        Create Account
+                    </button>
+
+                </div>
+
+                <div id="nivora-register-message"
+                     class="hidden mt-4 rounded-xl px-3 py-3 text-sm">
+                </div>
+
+                <div class="text-center mt-5">
+                    <button
+                        type="button"
+                        onclick="nivoraShowLogin()"
+                        class="text-green-400 hover:text-green-300
+                               font-bold text-sm">
+                        ← Login-এ ফিরে যান
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <p class="text-center text-xs text-slate-600 mt-4">
+            NIVORA ONE • Secure Firebase Authentication
+        </p>
+
+    </div>
+</div>
+
+
+<!-- =====================================================
+     NIVORA FIREBASE AUTH LOGIC
+     ===================================================== -->
+<script type="module">
+
+    import {
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        onAuthStateChanged,
+        updateProfile,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+    import {
+        doc,
+        setDoc,
+        serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+    function getNivoraFirebase() {
+
+        if (!window.NIVORA_FIREBASE) {
+            throw new Error(
+                "Firebase এখনো সংযুক্ত হয়নি। Firebase connection code পরীক্ষা করুন।"
+            );
+        }
+
+        return window.NIVORA_FIREBASE;
+    }
+
+
+    /* ===============================
+       MESSAGE
+       =============================== */
+
+    function nivoraAuthMessage(id, message, type = "error") {
+
+        const box = document.getElementById(id);
+
+        if (!box) return;
+
+        box.textContent = message;
+
+        box.classList.remove(
+            "hidden",
+            "bg-red-500/10",
+            "border-red-500/20",
+            "text-red-400",
+            "bg-green-500/10",
+            "border-green-500/20",
+            "text-green-400"
+        );
+
+        if (type === "success") {
+
+            box.classList.add(
+                "bg-green-500/10",
+                "border",
+                "border-green-500/20",
+                "text-green-400"
+            );
+
+        } else {
+
+            box.classList.add(
+                "bg-red-500/10",
+                "border",
+                "border-red-500/20",
+                "text-red-400"
+            );
+        }
+    }
+
+
+    /* ===============================
+       SHOW LOGIN
+       =============================== */
+
+    window.nivoraShowLogin = function () {
+
+        document
+            .getElementById("nivora-login-form")
+            ?.classList.remove("hidden");
+
+        document
+            .getElementById("nivora-register-form")
+            ?.classList.add("hidden");
+
+    };
+
+
+    /* ===============================
+       SHOW REGISTER
+       =============================== */
+
+    window.nivoraShowRegister = function () {
+
+        document
+            .getElementById("nivora-login-form")
+            ?.classList.add("hidden");
+
+        document
+            .getElementById("nivora-register-form")
+            ?.classList.remove("hidden");
+
+    };
+
+
+    /* ===============================
+       LOGIN
+       =============================== */
+
+    window.nivoraFirebaseLogin = async function () {
+
+        const email =
+            document.getElementById("nivora-login-email")
+                ?.value.trim();
+
+        const password =
+            document.getElementById("nivora-login-password")
+                ?.value;
+
+        if (!email || !password) {
+
+            nivoraAuthMessage(
+                "nivora-login-message",
+                "Email এবং Password দুটিই লিখুন।"
+            );
+
+            return;
+        }
+
+
+        const button =
+            document.getElementById("nivora-login-btn");
+
+        if (button) {
+
+            button.disabled = true;
+
+            button.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Login হচ্ছে...';
+        }
+
+
+        try {
+
+            const { auth } = getNivoraFirebase();
+
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+            nivoraAuthMessage(
+                "nivora-login-message",
+                "Login সফল হয়েছে।",
+                "success"
+            );
+
+        } catch (error) {
+
+            console.error(
+                "NIVORA Login Error:",
+                error
+            );
+
+            let message =
+                "Login করা যায়নি। তথ্য পরীক্ষা করুন।";
+
+            if (error.code === "auth/invalid-credential") {
+
+                message =
+                    "Email অথবা Password সঠিক নয়।";
+
+            } else if (error.code === "auth/user-not-found") {
+
+                message =
+                    "এই Email দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।";
+
+            } else if (error.code === "auth/wrong-password") {
+
+                message =
+                    "Password সঠিক নয়।";
+
+            } else if (error.code === "auth/invalid-email") {
+
+                message =
+                    "সঠিক Email Address দিন।";
+            }
+
+            nivoraAuthMessage(
+                "nivora-login-message",
+                message
+            );
+
+        } finally {
+
+            if (button) {
+
+                button.disabled = false;
+
+                button.innerHTML =
+                    '<i class="fa-solid fa-right-to-bracket mr-2"></i> Login';
+            }
+        }
+    };
+
+
+    /* ===============================
+       CREATE ACCOUNT
+       =============================== */
+
+    window.nivoraFirebaseRegister = async function () {
+
+        const name =
+            document.getElementById("nivora-register-name")
+                ?.value.trim();
+
+        const email =
+            document.getElementById("nivora-register-email")
+                ?.value.trim();
+
+        const password =
+            document.getElementById("nivora-register-password")
+                ?.value;
+
+        const password2 =
+            document.getElementById("nivora-register-password2")
+                ?.value;
+
+
+        if (!name || !email || !password || !password2) {
+
+            nivoraAuthMessage(
+                "nivora-register-message",
+                "সব তথ্য পূরণ করুন।"
+            );
+
+            return;
+        }
+
+
+        if (password.length < 6) {
+
+            nivoraAuthMessage(
+                "nivora-register-message",
+                "Password কমপক্ষে ৬ অক্ষরের হতে হবে।"
+            );
+
+            return;
+        }
+
+
+        if (password !== password2) {
+
+            nivoraAuthMessage(
+                "nivora-register-message",
+                "দুইটি Password একই নয়।"
+            );
+
+            return;
+        }
+
+
+        const button =
+            document.getElementById("nivora-register-btn");
+
+        if (button) {
+
+            button.disabled = true;
+
+            button.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Account তৈরি হচ্ছে...';
+        }
+
+
+        try {
+
+            const { auth, db } =
+                getNivoraFirebase();
+
+
+            /* Firebase Authentication */
+
+            const credential =
+                await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+
+            const user =
+                credential.user;
+
+
+            /* User display name */
+
+            await updateProfile(
+                user,
+                {
+                    displayName: name
+                }
+            );
+
+
+            /* Firestore User Profile */
+
+            await setDoc(
+                doc(db, "users", user.uid),
+                {
+                    uid: user.uid,
+                    name: name,
+                    email: user.email,
+                    role: "user",
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                },
+                {
+                    merge: true
+                }
+            );
+
+
+            nivoraAuthMessage(
+                "nivora-register-message",
+                "Account সফলভাবে তৈরি হয়েছে।",
+                "success"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "NIVORA Registration Error:",
+                error
+            );
+
+            let message =
+                "Account তৈরি করা যায়নি।";
+
+            if (error.code === "auth/email-already-in-use") {
+
+                message =
+                    "এই Email দিয়ে ইতিমধ্যে একটি Account আছে।";
+
+            } else if (error.code === "auth/invalid-email") {
+
+                message =
+                    "সঠিক Email Address দিন।";
+
+            } else if (error.code === "auth/weak-password") {
+
+                message =
+                    "Password আরও শক্তিশালী দিন।";
+
+            } else if (error.code === "permission-denied") {
+
+                message =
+                    "Firestore Permission সমস্যা হয়েছে।";
+
+            }
+
+            nivoraAuthMessage(
+                "nivora-register-message",
+                message
+            );
+
+        } finally {
+
+            if (button) {
+
+                button.disabled = false;
+
+                button.innerHTML =
+                    '<i class="fa-solid fa-user-plus mr-2"></i> Create Account';
+            }
+        }
+    };
+
+
+    /* ===============================
+       AUTH STATE
+       =============================== */
+
+    onAuthStateChanged(
+        getNivoraFirebase().auth,
+        async (user) => {
+
+            const authScreen =
+                document.getElementById(
+                    "nivora-auth-screen"
+                );
+
+            if (!authScreen) return;
+
+
+            if (user) {
+
+                /*
+                 * User Login অবস্থায়
+                 * Login Screen লুকিয়ে যাবে।
+                 */
+
+                authScreen.classList.add("hidden");
+
+
+                console.log(
+                    "NIVORA User:",
+                    user.uid,
+                    user.email
+                );
+
+
+                /*
+                 * Current user globally রাখা হচ্ছে
+                 */
+
+                window.NIVORA_CURRENT_USER = user;
+// =====================================================
+// NIVORA ONE - STEP 10
+// LOGIN SUCCESS → FIREBASE DATA LOAD
+// =====================================================
+
+if (typeof loadNivoraFromFirebase === "function") {
+
+    loadNivoraFromFirebase()
+        .then(function() {
+
+            console.log(
+                "NIVORA: Firebase data loaded successfully."
+            );
+
+        })
+        .catch(function(error) {
+
+            console.error(
+                "NIVORA: Firebase data load failed:",
+                error
+            );
+
+        });
+}
+
+                /*
+                 * Firestore profile নিশ্চিত করা
+                 */
+
+                try {
+
+                    const { db } =
+                        getNivoraFirebase();
+
+                    await setDoc(
+                        doc(db, "users", user.uid),
+                        {
+                            uid: user.uid,
+                            name:
+                                user.displayName || "",
+                            email:
+                                user.email || "",
+                            updatedAt:
+                                serverTimestamp()
+                        },
+                        {
+                            merge: true
+                        }
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "User profile sync error:",
+                        error
+                    );
+                }
+
+
+            } else {
+
+                /*
+                 * Login না থাকলে
+                 * Login Screen দেখাবে।
+                 */
+
+                authScreen.classList.remove(
+                    "hidden"
+                );
+
+                window.NIVORA_CURRENT_USER =
+                    null;
+            }
+
+        }
+    );
+
+
+    /* ===============================
+       LOGOUT FUNCTION
+       =============================== */
+
+    window.nivoraFirebaseLogout = async function () {
+
+        try {
+
+            const { auth } =
+                getNivoraFirebase();
+
+            await signOut(auth);
+
+            console.log(
+                "NIVORA Logout successful"
+            );
+
+        } catch (error) {
+
+            console.error(
+                "NIVORA Logout Error:",
+                error
+            );
+        }
+    };
+
+</script>
+   <!-- TOP HEADER -->
+    <header class="fixed top-0 left-0 right-0 h-[70px] bg-slate-900/90 glass-panel border-b border-slate-800 z-40 px-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <button id="global-back-btn" onclick="goBack()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-smooth">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div onclick="navigateTo('home')" class="flex items-center space-x-2.5 cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-brand-600/30">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base tracking-wide text-white leading-tight">NIVORA ONE</h1>
+                    <p class="text-[11px] text-slate-400 font-medium">All-in-One Professional Hub</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+            <button onclick="navigateTo('calculator')" class="relative p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-amber-400 hover:text-amber-300 transition" title="প্রফেশনাল ক্যালকুলেটর ও ঘড়ি">
+                <i class="fa-solid fa-calculator"></i>
+            </button>
+            <button onclick="navigateTo('cart')" class="relative p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white transition">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="cart-badge" class="absolute -top-1 -right-1 bg-brand-500 text-slate-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow">0</span>
+            </button>
+            <button onclick="navigateTo('account')" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white transition">
+                <i class="fa-solid fa-user"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- BOTTOM NAVIGATION BAR FOR MOBILE -->
+    <nav class="fixed bottom-0 left-0 right-0 h-[75px] bg-slate-900/95 glass-panel border-t border-slate-800 z-40 px-3 flex items-center justify-around sm:hidden">
+        <button onclick="navigateTo('home')" class="flex flex-col items-center justify-center text-slate-400 hover:text-brand-400 transition">
+            <i class="fa-solid fa-house text-lg mb-1"></i>
+            <span class="text-[10px] font-medium">হোম</span>
+        </button>
+        <button onclick="navigateTo('business')" class="flex flex-col items-center justify-center text-slate-400 hover:text-brand-400 transition">
+            <i class="fa-solid fa-briefcase text-lg mb-1"></i>
+            <span class="text-[10px] font-medium">বিজনেস</span>
+        </button>
+        <button onclick="navigateTo('calculator')" class="flex flex-col items-center justify-center text-slate-400 hover:text-brand-400 transition">
+            <i class="fa-solid fa-calculator text-lg mb-1 text-amber-400"></i>
+            <span class="text-[10px] font-medium">ক্যালকুলেটর</span>
+        </button>
+        <button onclick="navigateTo('taskearn')" class="flex flex-col items-center justify-center text-slate-400 hover:text-brand-400 transition">
+            <i class="fa-solid fa-coins text-lg mb-1"></i>
+            <span class="text-[10px] font-medium">টাস্ক আর্ন</span>
+        </button>
+        <button onclick="navigateTo('admin')" class="flex flex-col items-center justify-center text-slate-400 hover:text-brand-400 transition">
+            <i class="fa-solid fa-gauge-high text-lg mb-1"></i>
+            <span class="text-[10px] font-medium">অ্যাডমিন</span>
+        </button>
+    </nav>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="main-content-wrapper max-w-7xl mx-auto px-4 w-full">
+
+        <!-- HOME -->
+        <section id="view-home" class="app-view space-y-6">
+            <div class="glass-panel p-6 rounded-3xl relative overflow-hidden shadow-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-brand-950/40 border-brand-500/20">
+                <div class="relative z-10">
+                    <span class="px-3 py-1 rounded-full bg-brand-500/10 text-brand-400 text-xs font-semibold border border-brand-500/20 inline-block mb-3">
+                        <i class="fa-solid fa-circle text-[8px] mr-1.5 animate-pulse"></i> আবু যার এর ফুল অপারেশনাল সিস্টেম
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white mb-2">স্বাগতম, আবু যার!</h2>
+                    <p class="text-sm text-slate-400 max-w-xl">দৈনিক/সাপ্তাহিক/মাসিক/বাৎসরিক আয়-ব্যয় রিপোর্ট, প্রফেশনাল ক্যালকুলেটর ও লাইভ ঘড়ি যুক্ত করা হয়েছে।</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
+                <div onclick="navigateTo('calculator')" class="glass-panel p-5 rounded-2xl hover:border-amber-500/50 hover:bg-slate-800/80 cursor-pointer transition-smooth group flex flex-col items-center text-center shadow-lg border-amber-500/30">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-slate-200 mb-1">প্রো ক্যালকুলেটর ও ঘড়ি</h3>
+                    <p class="text-[11px] text-slate-400">ছাত্র ও পেশাজীবীদের জন্য ও লাইভ ঘড়ি</p>
+                </div>
+
+                <div onclick="navigateTo('ai')" class="glass-panel p-5 rounded-2xl hover:border-brand-500/50 hover:bg-slate-800/80 cursor-pointer transition-smooth group flex flex-col items-center text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-slate-200 mb-1">NIVORA AI</h3>
+                    <p class="text-[11px] text-slate-400">স্মার্ট এআই চ্যাট ও ডেটা অ্যাসিস্ট্যান্ট</p>
+                </div>
+
+                <div onclick="navigateTo('business')" class="glass-panel p-5 rounded-2xl hover:border-brand-500/50 hover:bg-slate-800/80 cursor-pointer transition-smooth group flex flex-col items-center text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-slate-200 mb-1">Connectra Business</h3>
+                    <p class="text-[11px] text-slate-400">আয়, ব্যয়, স্টক ও প্রফিট রিপোর্ট</p>
+                </div>
+
+                <div onclick="navigateTo('bakikhata')" class="glass-panel p-5 rounded-2xl hover:border-brand-500/50 hover:bg-slate-800/80 cursor-pointer transition-smooth group flex flex-col items-center text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-slate-200 mb-1">Digital Baki Khata</h3>
+                    <p class="text-[11px] text-slate-400">কাস্টমার বাকি ও পেমেন্ট খাতা</p>
+                </div>
+
+                <div onclick="navigateTo('ecommerce')" class="glass-panel p-5 rounded-2xl hover:border-brand-500/50 hover:bg-slate-800/80 cursor-pointer transition-smooth group flex flex-col items-center text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-slate-200 mb-1">E-Commerce Manager</h3>
+                    <p class="text-[11px] text-slate-400">অ্যাড, এডিট, ডিলিট ও শেয়ার URL</p>
+                </div>
+
+                <div onclick="navigateTo('taskearn')" class="glass-panel p-5 rounded-2xl hover:border-brand-500/50 hover:bg-slate-800/80 cursor-pointer transition-smooth group flex flex-col items-center text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-2xl bg-yellow-500/10 text-yellow-400 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-slate-200 mb-1">TaskEarn BD Hub</h3>
+                    <p class="text-[11px] text-slate-400">টাস্ক তৈরি, এডিট, ডিলিট ও রিওয়ার্ড</p>
+                </div>
+
+                <div onclick="navigateTo('homeo')" class="glass-panel p-5 rounded-2xl hover:border-brand-500/50 hover:bg-slate-800/80 cursor-pointer transition-smooth group flex flex-col items-center text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-2xl bg-teal-500/10 text-teal-400 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-notes-medical"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-slate-200 mb-1">German Homeo Hall</h3>
+                    <p class="text-[11px] text-slate-400">ডাঃ আবু জার ফয়েজী (DHMS)</p>
+                </div>
+
+                <div onclick="navigateTo('admin')" class="glass-panel p-5 rounded-2xl hover:border-brand-500/50 hover:bg-slate-800/80 cursor-pointer transition-smooth group flex flex-col items-center text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-500/10 text-brand-400 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-gauge-high"></i>
+                    </div>
+                    <h3 class="font-bold text-sm text-slate-200 mb-1">Admin Panel</h3>
+                    <p class="text-[11px] text-slate-400">সিস্টেম কন্ট্রোল ও ব্যাকআপ</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROFESSIONAL CALCULATOR & LIVE CLOCK -->
+        <section id="view-calculator" class="app-view hidden space-y-6">
+            <div class="glass-panel p-4 rounded-2xl flex items-center justify-between flex-wrap gap-3 bg-gradient-to-r from-amber-950/30 to-slate-900 border-amber-500/20">
+                <div>
+                    <h2 class="font-bold text-amber-400 text-base"><i class="fa-solid fa-calculator mr-2"></i>প্রফেশনাল ক্যালকুলেটর ও লাইভ ঘড়ি</h2>
+                    <p class="text-xs text-slate-300">ছাত্র ও পেশাজীবীদের জন্য আন্তর্জাতিক মানের ক্যালকুলেটর</p>
+                </div>
+                <!-- Live Online Clock Component -->
+                <div id="live-online-clock" class="bg-slate-950 px-4 py-2 rounded-xl border border-amber-500/30 text-amber-300 font-mono text-sm font-bold shadow-inner flex items-center space-x-2">
+                    <i class="fa-regular fa-clock animate-pulse"></i>
+                    <span id="clock-display">00:00:00 AM</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Calculator Box -->
+                <div class="md:col-span-2 glass-panel p-5 rounded-3xl space-y-4 border-slate-800 shadow-xl">
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-right">
+                        <div id="calc-history" class="text-xs text-slate-500 min-h-[20px] font-mono"></div>
+                        <div id="calc-screen" class="text-2xl sm:text-3xl font-bold text-white font-mono tracking-wider overflow-x-auto">0</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-4 gap-2.5">
+                        <button onclick="calcClear()" class="p-3.5 rounded-xl bg-rose-600/20 text-rose-400 hover:bg-rose-600/30 font-bold text-sm transition border border-rose-500/20">AC</button>
+                        <button onclick="calcDel()" class="p-3.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm transition">⌫</button>
+                        <button onclick="calcAppend('%')" class="p-3.5 rounded-xl bg-slate-800 text-brand-400 hover:bg-slate-700 font-bold text-sm transition">%</button>
+                        <button onclick="calcAppend('/')" class="p-3.5 rounded-xl bg-brand-600/20 text-brand-400 hover:bg-brand-600/30 font-bold text-sm transition border border-brand-500/20">÷</button>
+                        
+                        <button onclick="calcAppend('7')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">7</button>
+                        <button onclick="calcAppend('8')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">8</button>
+                        <button onclick="calcAppend('9')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">9</button>
+                        <button onclick="calcAppend('*')" class="p-3.5 rounded-xl bg-brand-600/20 text-brand-400 hover:bg-brand-600/30 font-bold text-sm transition border border-brand-500/20">×</button>
+                        
+                        <button onclick="calcAppend('4')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">4</button>
+                        <button onclick="calcAppend('5')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">5</button>
+                        <button onclick="calcAppend('6')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">6</button>
+                        <button onclick="calcAppend('-')" class="p-3.5 rounded-xl bg-brand-600/20 text-brand-400 hover:bg-brand-600/30 font-bold text-sm transition border border-brand-500/20">-</button>
+                        
+                        <button onclick="calcAppend('1')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">1</button>
+                        <button onclick="calcAppend('2')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">2</button>
+                        <button onclick="calcAppend('3')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">3</button>
+                        <button onclick="calcAppend('+')" class="p-3.5 rounded-xl bg-brand-600/20 text-brand-400 hover:bg-brand-600/30 font-bold text-sm transition border border-brand-500/20">+</button>
+                        
+                        <button onclick="calcAppend('0')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition col-span-2">0</button>
+                        <button onclick="calcAppend('.')" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">.</button>
+                        <button onclick="calcCompute()" class="p-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm transition shadow-lg shadow-brand-600/30">=</button>
+                    </div>
+
+                    <!-- Advanced Scientific Functions for Professionals & Students -->
+                    <div class="grid grid-cols-4 gap-2 pt-2 border-t border-slate-800">
+                        <button onclick="calcMath('Math.sin(Math.PI/180 *')" class="py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 font-medium">sin</button>
+                        <button onclick="calcMath('Math.cos(Math.PI/180 *')" class="py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 font-medium">cos</button>
+                        <button onclick="calcMath('Math.tan(Math.PI/180 *')" class="py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 font-medium">tan</button>
+                        <button onclick="calcMath('Math.sqrt(')" class="py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 font-medium">√</button>
+                    </div>
+                </div>
+
+                <!-- Quick Student/Professional Tools Info -->
+                <div class="glass-panel p-5 rounded-3xl space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-white text-sm mb-2"><i class="fa-solid fa-graduation-cap text-brand-400 mr-2"></i>ইউজার গাইড</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">এই ক্যালকুলেটরটি ছাত্র ও প্রফেশনালদের হিসাব-নিকাশ, ত্রিকোণমিতি এবং নিত্যদিনের গাণিতিক সমস্যার জন্য অত্যন্ত উপযোগী। এর সাথে ঘড়িটি রিয়েল-টাইম অনলাইন সময় প্রদর্শন করে।</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-center">
+                        <div class="text-xs text-slate-400 mb-1">তারিখ</div>
+                        <div id="clock-date-display" class="text-sm font-bold text-amber-400">--/--/----</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI CHAT -->
+        <section id="view-ai" class="app-view hidden space-y-4">
+            <div class="glass-panel p-4 rounded-2xl flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-white text-sm">NIVORA AI অ্যাসিস্ট্যান্ট</h2>
+                        <p class="text-xs text-slate-400">আপনার ব্যবসার সমস্ত ডেটা ও টাস্ক ম্যানেজার</p>
+                    </div>
+                </div>
+                <button onclick="clearAIChat()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">
+                    <i class="fa-solid fa-trash mr-1"></i> ক্লিয়ার চ্যাট
+                </button>
+            </div>
+
+            <div class="glass-panel rounded-2xl flex flex-col h-[65vh] overflow-hidden">
+                <div id="ai-chat-container" class="flex-1 p-4 overflow-y-auto space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">AI</div>
+                        <div class="glass-panel bg-slate-900/90 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-sm text-slate-200 leading-relaxed">
+                            আসসালামু আলাইকুম! আমি NIVORA AI। স্টক, আয়-ব্যয় রিপোর্ট বা ক্যালকুলেটর নিয়ে যেকোনো প্রশ্ন করুন।
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-slate-900/90 border-t border-slate-800 flex items-center space-x-2">
+                    <button onclick="triggerVoiceInput()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm transition" title="Voice Input">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                    <input type="text" id="ai-user-input" onkeypress="handleAIKeypress(event)" placeholder="আপনার বার্তা এখানে লিখুন..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-purple-500">
+                    <button onclick="sendAIMessage()" class="w-10 h-10 rounded-xl bg-purple-600 hover:bg-purple-500 text-white flex items-center justify-center text-sm transition">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- BUSINESS MANAGER (WITH DAILY, WEEKLY, MONTHLY, YEARLY REPORT & EDIT/DELETE) -->
+        <section id="view-business" class="app-view hidden space-y-6">
+            <div class="glass-panel p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <h2 class="font-bold text-white text-base">Connectra Business & Finance Hub</h2>
+                    <p class="text-xs text-slate-400">দৈনিক, সাপ্তাহিক, মাসিক ও বাৎসরিক আয়-ব্যয় রিপোর্ট এবং এডিট/ডিলিট</p>
+                </div>
+                <div class="flex items-center space-x-2 flex-wrap gap-y-2">
+                    <button onclick="switchBusinessTab('products')" class="px-3.5 py-2 rounded-xl bg-brand-600 text-white text-xs font-bold business-tab-btn" data-tab="products">প্রোডাক্ট</button>
+                    <button onclick="switchBusinessTab('reports')" class="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-medium business-tab-btn" data-tab="reports">আয়-ব্যয় রিপোর্ট</button>
+                    <button onclick="switchBusinessTab('purchase')" class="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-medium business-tab-btn" data-tab="purchase">পারচেজ</button>
+                    <button onclick="switchBusinessTab('sales')" class="px-3.5 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-medium business-tab-btn" data-tab="sales">সেলস</button>
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div id="biz-tab-products" class="biz-tab-content space-y-4">
+                <div class="glass-panel p-4 rounded-2xl space-y-3">
+                    <h3 class="font-bold text-brand-400 text-sm">নতুন প্রোডাক্ট যুক্ত করুন</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <input type="text" id="prod-name" placeholder="প্রোডাক্টের নাম" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="text" id="prod-code" placeholder="SKU / কোড" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="text" id="prod-category" placeholder="ক্যাটাগরি" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="number" id="prod-pprice" placeholder="ক্রয়মূল্য (৳)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="number" id="prod-sprice" placeholder="বিক্রয়মূল্য (৳)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="number" id="prod-qty" placeholder="পরিমাণ" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                    </div>
+                    <button onclick="saveBusinessProduct()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-medium py-2.5 rounded-xl text-sm transition">প্রোডাক্ট সংরক্ষণ করুন</button>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-white text-sm">প্রোডাক্ট তালিকা</h3>
+                        <input type="text" id="prod-search" oninput="renderBusinessProducts()" placeholder="খুঁজুন..." class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 w-48">
+                    </div>
+                    <div id="business-products-list" class="space-y-2"></div>
+                </div>
+            </div>
+
+            <!-- Reports Tab (Daily, Weekly, Monthly, Yearly Income/Expense with Edit & Delete) -->
+            <div id="biz-tab-reports" class="biz-tab-content hidden space-y-6">
+                <!-- Add Income / Expense Entry Form -->
+                <div class="glass-panel p-4 rounded-2xl space-y-3 border-brand-500/30">
+                    <h3 id="finance-form-title" class="font-bold text-brand-400 text-sm">নতুন আয় বা ব্যয় এন্ট্রি করুন</h3>
+                    <input type="hidden" id="edit-finance-id">
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                        <select id="fin-type" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                            <option value="income">আয় (Income)</option>
+                            <option value="expense">ব্যয় (Expense)</option>
+                        </select>
+                        <input type="text" id="fin-title" placeholder="বিবরণ (যেমন: দোকান ভাড়া / ক্যাশ বিক্রি)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="number" id="fin-amount" placeholder="পরিমাণ (৳)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="date" id="fin-date" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="saveFinanceRecord()" class="flex-1 bg-brand-600 hover:bg-brand-500 text-white font-medium py-2.5 rounded-xl text-sm transition">এন্ট্রি সংরক্ষণ করুন</button>
+                        <button onclick="resetFinanceForm()" id="fin-cancel-btn" class="hidden px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm transition">বাতিল</button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards: Daily, Weekly, Monthly, Yearly -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="glass-panel p-4 rounded-xl text-center border-emerald-500/20">
+                        <div class="text-xs text-slate-400 mb-1">দৈনিক নিট (আজ)</div>
+                        <div id="rep-daily" class="text-lg font-bold text-emerald-400">৳ ০</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl text-center border-blue-500/20">
+                        <div class="text-xs text-slate-400 mb-1">সাপ্তাহিক নিট</div>
+                        <div id="rep-weekly" class="text-lg font-bold text-blue-400">৳ ০</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl text-center border-amber-500/20">
+                        <div class="text-xs text-slate-400 mb-1">মাসিক নিট</div>
+                        <div id="rep-monthly" class="text-lg font-bold text-amber-400">৳ ০</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl text-center border-purple-500/20">
+                        <div class="text-xs text-slate-400 mb-1">বাৎসরিক নিট</div>
+                        <div id="rep-yearly" class="text-lg font-bold text-purple-400">৳ ০</div>
+                    </div>
+                </div>
+
+                <!-- Records List with Edit & Delete -->
+                <div class="glass-panel p-4 rounded-2xl space-y-3">
+                    <h3 class="font-bold text-white text-sm">সকল আয় ও ব্যয় রেকর্ড তালিকা</h3>
+                    <div id="finance-records-list" class="space-y-2"></div>
+                </div>
+            </div>
+
+            <!-- Purchase Tab -->
+            <div id="biz-tab-purchase" class="biz-tab-content hidden space-y-4">
+                <div class="glass-panel p-4 rounded-2xl space-y-3">
+                    <h3 class="font-bold text-brand-400 text-sm">নতুন পারচেজ এন্ট্রি</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="pur-supplier" placeholder="সাপ্লায়ারের নাম" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <select id="pur-product-select" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200"></select>
+                        <input type="number" id="pur-qty" placeholder="পরিমাণ" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="number" id="pur-price" placeholder="মোট ক্রয়মূল্য (৳)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                    </div>
+                    <button onclick="addPurchaseEntry()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-medium py-2.5 rounded-xl text-sm transition">পারচেজ এন্ট্রি যোগ করুন</button>
+                </div>
+            </div>
+
+            <!-- Sales Tab -->
+            <div id="biz-tab-sales" class="biz-tab-content hidden space-y-4">
+                <div class="glass-panel p-4 rounded-2xl space-y-3">
+                    <h3 class="font-bold text-brand-400 text-sm">নতুন সেলস এন্ট্রি</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="sale-customer" placeholder="গ্রাহকের নাম" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <select id="sale-product-select" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200"></select>
+                        <input type="number" id="sale-qty" placeholder="পরিমাণ" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="number" id="sale-price" placeholder="মোট বিক্রয়মূল্য (৳)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                    </div>
+                    <button onclick="addSalesEntry()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-medium py-2.5 rounded-xl text-sm transition">সেলস এন্ট্রি যোগ করুন</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TASK EARN BD HUB (WITH ADD, EDIT, DELETE) -->
+        <section id="view-taskearn" class="app-view hidden space-y-4">
+            <div class="glass-panel p-5 rounded-2xl bg-gradient-to-r from-amber-950/40 to-slate-900 border-amber-500/20 flex items-center justify-between">
+                <div>
+                    <h2 class="font-black text-amber-400 text-xl mb-1"><i class="fa-solid fa-coins mr-2"></i> TaskEarn BD Hub</h2>
+                    <p class="text-xs text-slate-300">টাস্ক তৈরি, এডিট, ডিলিট এবং টাস্ক সম্পন্ন করে রিওয়ার্ড নিন।</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs text-slate-400">ওয়ালেট ব্যালেন্স</div>
+                    <div id="taskearn-balance" class="text-lg font-black text-brand-400">৳ ০.০০</div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-4 rounded-2xl space-y-3">
+                <h3 id="task-form-title" class="font-bold text-amber-400 text-sm">নতুন টাস্ক যুক্ত করুন</h3>
+                <input type="hidden" id="edit-task-id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input type="text" id="task-title" placeholder="টাস্কের শিরোনাম" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                    <input type="number" id="task-reward" placeholder="রিওয়ার্ড পরিমাণ (টাকা)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="saveTaskItem()" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl text-sm transition">টাস্ক সেভ করুন</button>
+                    <button onclick="resetTaskForm()" id="task-cancel-btn" class="hidden px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm transition">বাতিল</button>
+                </div>
+            </div>
+
+            <div class="glass-panel p-4 rounded-2xl space-y-3">
+                <h3 class="font-bold text-white text-sm">সকল টাস্ক তালিকা</h3>
+                <div id="taskearn-list" class="space-y-2"></div>
+            </div>
+        </section>
+
+        <!-- E-COMMERCE MANAGER (WITH ADD, EDIT, DELETE & SHARE URL) -->
+        <section id="view-ecommerce" class="app-view hidden space-y-4">
+            <div class="glass-panel p-4 rounded-2xl flex items-center justify-between flex-wrap gap-3">
+                <div>
+                    <h2 class="font-bold text-white text-base">NIVORA E-Commerce Manager</h2>
+                    <p class="text-xs text-slate-400">প্রোডাক্ট অ্যাড, এডিট, ডিলিট এবং সোশ্যাল শেয়ার লিঙ্ক</p>
+                </div>
+                <button onclick="navigateTo('cart')" class="px-3.5 py-2 rounded-xl bg-brand-600 text-white text-xs font-bold">কার্ট দেখুন</button>
+            </div>
+
+            <div class="glass-panel p-4 rounded-2xl space-y-3">
+                <h3 id="shop-form-title" class="font-bold text-brand-400 text-sm">নতুন ই-কমার্স প্রোডাক্ট যুক্ত করুন</h3>
+                <input type="hidden" id="edit-shop-id">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <input type="text" id="shop-name" placeholder="প্রোডাক্ট নাম" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                    <input type="number" id="shop-price" placeholder="মূল্য (৳)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                    <input type="text" id="shop-image" placeholder="ইমেজ URL (ঐচ্ছিক)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="saveShopProduct()" class="flex-1 bg-brand-600 hover:bg-brand-500 text-white font-medium py-2.5 rounded-xl text-sm transition">প্রোডাক্ট সংরক্ষণ করুন</button>
+                    <button onclick="resetShopForm()" id="shop-cancel-btn" class="hidden px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm transition">বাতিল</button>
+                </div>
+            </div>
+
+            <div id="shop-products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- BAKI KHATA -->
+        <section id="view-bakikhata" class="app-view hidden space-y-4">
+            <div class="glass-panel p-4 rounded-2xl flex items-center justify-between flex-wrap gap-3">
+                <div>
+                    <h2 class="font-bold text-white text-base">Digital Baki Khata</h2>
+                    <p class="text-xs text-slate-400">কাস্টমার বাকি এবং লেনদেন খাতা</p>
+                </div>
+                <button onclick="openAddCustomerModal()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition">
+                    <i class="fa-solid fa-user-plus mr-1"></i> নতুন কাস্টমার
+                </button>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl space-y-3">
+                <div id="baki-customers-list" class="space-y-2"></div>
+            </div>
+        </section>
+
+        <!-- CART & CHECKOUT -->
+        <section id="view-cart" class="app-view hidden space-y-4">
+            <div class="glass-panel p-4 rounded-2xl">
+                <h2 class="font-bold text-white text-base mb-1">শপিং কার্ট ও অর্ডার</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="md:col-span-2 glass-panel p-4 rounded-2xl space-y-3">
+                    <div id="cart-items-list" class="space-y-2"></div>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl space-y-4">
+                    <h3 class="font-bold text-white text-sm">অর্ডার সারাংশ</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between text-slate-300"><span>সাবটোটাল:</span><span id="cart-subtotal">৳ ০</span></div>
+                        <div class="flex justify-between text-slate-300"><span>ডেলিভারি চার্জ:</span><span>৳ ৬০</span></div>
+                        <div class="border-t border-slate-800 pt-2 flex justify-between font-bold text-brand-400 text-base"><span>মোট:</span><span id="cart-grandtotal">৳ ০</span></div>
+                    </div>
+                    <div class="space-y-2 pt-2">
+                        <input type="text" id="checkout-name" placeholder="আপনার নাম" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
+                        <input type="text" id="checkout-phone" placeholder="মোবাইল নম্বর" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
+                        <textarea id="checkout-address" placeholder="পূর্ণ ঠিকানা" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200"></textarea>
+                    </div>
+                    <button onclick="placeOrder()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-2.5 rounded-xl text-sm transition">অর্ডার কনফার্ম করুন</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- GERMAN HOMEO HALL -->
+        <section id="view-homeo" class="app-view hidden space-y-4">
+            <div class="glass-panel p-6 rounded-2xl bg-gradient-to-r from-teal-950/40 to-slate-900 border-teal-500/20">
+                <h2 class="font-black text-teal-400 text-xl mb-1">German Homeo Hall</h2>
+                <p class="text-xs text-slate-300 mb-2">প্রোপ্রাইটর ও চিকিৎসক: ডাঃ আবু জার ফয়েজী (DHMS Dhaka)🇧🇩
+-------------------------------+---------------------------------------
+দীর্ঘ ২২ বছরের অভিজ্ঞতা সম্পন্ন।
+যোগাযোগ করুন📞 -০১৯১২৪২০৮২৭
++০১৯৭৭৪২০৮২৭
+,❤️‍🩹বিশেষ করে 
+ যে সকল বিষয়ে রুগি দেখেন👉 ক্যান্সার ডায়াবেটিস স্ট্রোক প্যারালাইসিস জ্বালা-বাত ব্যথা হাড় ক্ষয় যৌন দুর্বলতা বন্ধ্যাত্ব জন্মগত প্রতিবন্ধি শ্বাস কষ্ট  দাউদ ইত্যাদি সহ সকল প্রকার জটিল রোগের সুচিকিৎসা প্রদান করেন ‌।</p>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl space-y-3">
+                <h3 class="font-bold text-white text-sm">নতুন রোগীর অ্যাপয়েন্টমেন্ট / প্রেসক্রিপশন</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input type="text" id="homeo-patient" placeholder="রোগীর নাম" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                    <input type="text" id="homeo-phone" placeholder="মোবাইল নম্বর" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                    <textarea id="homeo-symptom" placeholder="রোগের লক্ষণ ও প্রেসক্রিপশন নোট..." rows="2" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-200 sm:col-span-2"></textarea>
+                </div>
+                <button onclick="saveHomeoRecord()" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-medium py-2.5 rounded-xl text-sm transition">রেকর্ড সংরক্ষণ করুন</button>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl space-y-2">
+                <div id="homeo-records-list" class="space-y-2"></div>
+            </div>
+        </section>
+
+        <!-- MY ACCOUNT -->
+        <section id="view-account" class="app-view hidden space-y-4">
+            <div class="glass-panel p-6 rounded-2xl text-center space-y-3">
+                <div class="w-20 h-20 rounded-full bg-brand-600 text-white flex items-center justify-center text-3xl font-bold mx-auto shadow-lg shadow-brand-600/30">
+                    আ
+                </div>
+                <div>
+                    <h2 class="font-bold text-white text-lg">আবু যার</h2>
+                    <p class="text-xs text-slate-400">abu.zar@nivora.one</p>
+                </div>
+                <span class="inline-block px-3 py-1 rounded-full bg-brand-500/10 text-brand-400 text-xs font-semibold border border-brand-500/20">অ্যাডমিন অ্যাকাউন্ট</span>
+            </div>
+        </section>
+
+        <!-- ADMIN PANEL -->
+        <section id="view-admin" class="app-view hidden space-y-4">
+            <div class="glass-panel p-4 rounded-2xl">
+                <h2 class="font-bold text-white text-base mb-1">Admin Control Panel</h2>
+                <p class="text-xs text-slate-400">সিস্টেম ওভারভিউ ও ম্যানেজমেন্ট</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="glass-panel p-4 rounded-xl text-center">
+                    <div class="text-xs text-slate-400">মোট প্রোডাক্ট</div>
+                    <div id="admin-stat-products" class="text-lg font-bold text-white">০</div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl text-center">
+                    <div class="text-xs text-slate-400">মোট অর্ডার</div>
+                    <div id="admin-stat-orders" class="text-lg font-bold text-brand-400">০</div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl text-center">
+                    <div class="text-xs text-slate-400">মোট কাস্টমার</div>
+                    <div id="admin-stat-customers" class="text-lg font-bold text-amber-400">০</div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl text-center">
+                    <div class="text-xs text-slate-400">মোট টাস্ক</div>
+                    <div id="admin-stat-tasks" class="text-lg font-bold text-purple-400">০</div>
+                </div>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl space-y-3">
+                <h3 class="font-bold text-white text-sm">সিস্টেম অ্যাকশন</h3>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="exportAppData()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition">ডেটা ব্যাকআপ (JSON)</button>
+                    <button onclick="resetAppData()" class="px-4 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 text-xs font-bold transition border border-rose-500/20">ফ্যাক্টরি রিসেট</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // State Management & LocalStorage
+        let appState = {
+            products: JSON.parse(localStorage.getItem('nivora_products')) || [],
+            shopProducts: JSON.parse(localStorage.getItem('nivora_shop')) || [],
+            financeRecords: JSON.parse(localStorage.getItem('nivora_finance')) || [
+                { id: 'f1', type: 'income', title: 'দোকান ক্যাশ বিক্রি', amount: 5000, date: new Date().toISOString().split('T')[0] },
+                { id: 'f2', type: 'expense', title: 'দোকান বিদ্যুৎ বিল', amount: 800, date: new Date().toISOString().split('T')[0] }
+            ],
+            customers: JSON.parse(localStorage.getItem('nivora_customers')) || [],
+            cart: JSON.parse(localStorage.getItem('nivora_cart')) || [],
+            orders: JSON.parse(localStorage.getItem('nivora_orders')) || [],
+            taskEarnBalance: parseFloat(localStorage.getItem('nivora_taskearn_bal')) || 120.50,
+            taskEarnTasks: JSON.parse(localStorage.getItem('nivora_taskearn_tasks')) || [
+                { id: 't1', title: 'ভিডিও টাস্ক দেখুন (10s)', reward: 15, completed: false }
+            ],
+            homeo: JSON.parse(localStorage.getItem('nivora_homeo')) || [],
+            aiHistory: JSON.parse(localStorage.getItem('nivora_ai_history')) || []
+        };
+
+     
+// =====================================================
+// NIVORA ONE - FIREBASE FIRESTORE DATA SYNC
+// STEP 8
+// LocalStorage থাকবে + Firebase-এও Save হবে
+// =====================================================
+
+function getNivoraFirebase() {
+    return window.NIVORA_FIREBASE || null;
+}
+
+
+// -----------------------------------------------------
+// বর্তমান User UID
+// -----------------------------------------------------
+
+function getNivoraUserId() {
+    try {
+        const currentUser = window.NIVORA_CURRENT_USER;
+
+        if (currentUser && currentUser.uid) {
+            return currentUser.uid;
+        }
+
+        const firebase = getNivoraFirebase();
+
+        if (firebase && firebase.auth && firebase.auth.currentUser) {
+            return firebase.auth.currentUser.uid;
+        }
+
+        return null;
+
+    } catch (error) {
+        console.error("NIVORA User UID error:", error);
+        return null;
+    }
+}
+
+
+// -----------------------------------------------------
+// LocalStorage Save
+// -----------------------------------------------------
+
+function saveLocalState() {
+
+    try {
+
+        localStorage.setItem(
+            'nivora_products',
+            JSON.stringify(appState.products)
+        );
+
+        localStorage.setItem(
+            'nivora_shop',
+            JSON.stringify(appState.shopProducts)
+        );
+
+        localStorage.setItem(
+            'nivora_finance',
+            JSON.stringify(appState.financeRecords)
+        );
+
+        localStorage.setItem(
+            'nivora_customers',
+            JSON.stringify(appState.customers)
+        );
+
+        localStorage.setItem(
+            'nivora_cart',
+            JSON.stringify(appState.cart)
+        );
+
+        localStorage.setItem(
+            'nivora_orders',
+            JSON.stringify(appState.orders)
+        );
+
+        localStorage.setItem(
+            'nivora_taskearn_bal',
+            appState.taskEarnBalance
+        );
+
+        localStorage.setItem(
+            'nivora_taskearn_tasks',
+            JSON.stringify(appState.taskEarnTasks)
+        );
+
+        localStorage.setItem(
+            'nivora_homeo',
+            JSON.stringify(appState.homeo)
+        );
+
+        localStorage.setItem(
+            'nivora_ai_history',
+            JSON.stringify(appState.aiHistory)
+        );
+
+    } catch (error) {
+
+        console.error(
+            "NIVORA LocalStorage save error:",
+            error
+        );
+
+    }
+}
+
+
+// -----------------------------------------------------
+// Firebase Firestore Save
+// -----------------------------------------------------
+
+async function saveNivoraToFirebase() {
+
+    try {
+
+        const firebase = getNivoraFirebase();
+        const uid = getNivoraUserId();
+
+        // Firebase অথবা User না থাকলে
+        // LocalStorage-এ Save থাকবে
+        if (!firebase || !firebase.db || !uid) {
+            return false;
+        }
+
+        // Firestore functions
+        const {
+            doc,
+            setDoc,
+            serverTimestamp
+        } = await import(
+            "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js"
+        );
+
+
+        const userData = {
+
+            products: Array.isArray(appState.products)
+                ? appState.products
+                : [],
+
+            shopProducts: Array.isArray(appState.shopProducts)
+                ? appState.shopProducts
+                : [],
+
+            financeRecords: Array.isArray(appState.financeRecords)
+                ? appState.financeRecords
+                : [],
+
+            customers: Array.isArray(appState.customers)
+                ? appState.customers
+                : [],
+
+            cart: Array.isArray(appState.cart)
+                ? appState.cart
+                : [],
+
+            orders: Array.isArray(appState.orders)
+                ? appState.orders
+                : [],
+
+            taskEarnBalance:
+                Number(appState.taskEarnBalance) || 0,
+
+            taskEarnTasks:
+                Array.isArray(appState.taskEarnTasks)
+                    ? appState.taskEarnTasks
+                    : [],
+
+            homeo:
+                Array.isArray(appState.homeo)
+                    ? appState.homeo
+                    : [],
+
+            aiHistory:
+                Array.isArray(appState.aiHistory)
+                    ? appState.aiHistory.slice(-40)
+                    : [],
+
+            updatedAt: serverTimestamp()
+
+        };
+
+
+        // users/{uid}/nivora/state
+        const stateRef = doc(
+            firebase.db,
+            "users",
+            uid,
+            "nivora",
+            "state"
+        );
+
+
+        await setDoc(
+            stateRef,
+            userData,
+            {
+                merge: true
+            }
+        );
+
+
+        console.log(
+            "NIVORA Firebase data saved successfully."
+        );
+
+        return true;
+
+
+    } catch (error) {
+
+        console.error(
+            "NIVORA Firebase save error:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+// -----------------------------------------------------
+// MAIN saveState()
+// পুরোনো সব function এখান থেকেই Save করবে
+// -----------------------------------------------------
+
+async function saveState() {
+
+    // 1. আগে LocalStorage
+    // তাই Firebase সমস্যা হলেও
+    // অ্যাপের বর্তমান কাজ বন্ধ হবে না
+    saveLocalState();
+
+
+    // 2. Cart badge
+    try {
+        updateCartBadge();
+    } catch (error) {
+        console.warn(
+            "NIVORA cart badge update warning:",
+            error
+        );
+    }
+
+
+    // 3. Firebase
+    // Background-এ Save হবে
+    try {
+
+        saveNivoraToFirebase()
+            .then(function(success) {
+
+                if (success) {
+
+                    console.log(
+                        "NIVORA: Firebase sync complete."
+                    );
+
+                }
+
+            })
+            .catch(function(error) {
+
+                console.error(
+                    "NIVORA Firebase background sync error:",
+                    error
+                );
+
+            });
+
+    } catch (error) {
+
+        console.error(
+            "NIVORA Firebase sync start error:",
+            error
+        );
+
+    }
+}
+
+
+// -----------------------------------------------------
+// Firebase থেকে Data Load করার জন্য
+// পরের ধাপে ব্যবহার হবে
+// -----------------------------------------------------
+
+window.NIVORA_FIREBASE_SYNC = {
+
+    save: saveNivoraToFirebase,
+
+    saveLocal: saveLocalState,
+
+    getUserId: getNivoraUserId
+
+};
+
+console.log(
+    "NIVORA STEP 8 Firestore Sync Loaded"
+);// =====================================================
+// NIVORA ONE - STEP 8
+// FIREBASE FIRESTORE DATA SAVE
+// =====================================================
+
+function getNivoraFirebase() {
+    return window.NIVORA_FIREBASE || null;
+}
+
+
+// =====================================================
+// CURRENT USER ID
+// =====================================================
+
+function getNivoraUserId() {
+
+    try {
+
+        if (
+            window.NIVORA_CURRENT_USER &&
+            window.NIVORA_CURRENT_USER.uid
+        ) {
+            return window.NIVORA_CURRENT_USER.uid;
+        }
+
+        const firebase = getNivoraFirebase();
+
+        if (
+            firebase &&
+            firebase.auth &&
+            firebase.auth.currentUser
+        ) {
+            return firebase.auth.currentUser.uid;
+        }
+
+        return null;
+
+    } catch (error) {
+
+        console.error(
+            "NIVORA User ID Error:",
+            error
+        );
+
+        return null;
+    }
+}
+
+
+// =====================================================
+// LOCAL STORAGE SAVE
+// =====================================================
+
+function saveLocalState() {
+
+    try {
+
+        localStorage.setItem(
+            'nivora_products',
+            JSON.stringify(appState.products)
+        );
+
+        localStorage.setItem(
+            'nivora_shop',
+            JSON.stringify(appState.shopProducts)
+        );
+
+        localStorage.setItem(
+            'nivora_finance',
+            JSON.stringify(appState.financeRecords)
+        );
+
+        localStorage.setItem(
+            'nivora_customers',
+            JSON.stringify(appState.customers)
+        );
+
+        localStorage.setItem(
+            'nivora_cart',
+            JSON.stringify(appState.cart)
+        );
+
+        localStorage.setItem(
+            'nivora_orders',
+            JSON.stringify(appState.orders)
+        );
+
+        localStorage.setItem(
+            'nivora_taskearn_bal',
+            appState.taskEarnBalance
+        );
+
+        localStorage.setItem(
+            'nivora_taskearn_tasks',
+            JSON.stringify(appState.taskEarnTasks)
+        );
+
+        localStorage.setItem(
+            'nivora_homeo',
+            JSON.stringify(appState.homeo)
+        );
+
+        localStorage.setItem(
+            'nivora_ai_history',
+            JSON.stringify(appState.aiHistory)
+        );
+
+    } catch (error) {
+
+        console.error(
+            "NIVORA LocalStorage Error:",
+            error
+        );
+
+    }
+}
+
+
+// =====================================================
+// FIREBASE SAVE
+// =====================================================
+
+async function saveNivoraToFirebase() {
+
+    try {
+
+        const firebase = getNivoraFirebase();
+        const uid = getNivoraUserId();
+
+
+        // Firebase/User না থাকলে
+        // LocalStorage কাজ করতে থাকবে
+
+        if (
+            !firebase ||
+            !firebase.db ||
+            !uid
+        ) {
+
+            console.log(
+                "NIVORA Firebase save skipped: User not logged in."
+            );
+
+            return false;
+        }
+
+
+        // Firestore functions
+        const firestore = await import(
+            "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js"
+        );
+
+
+        const {
+            doc,
+            setDoc,
+            serverTimestamp
+        } = firestore;
+
+
+        // =================================================
+        // USER DATA
+        // =================================================
+
+        const userData = {
+
+            products:
+                Array.isArray(appState.products)
+                    ? appState.products
+                    : [],
+
+            shopProducts:
+                Array.isArray(appState.shopProducts)
+                    ? appState.shopProducts
+                    : [],
+
+            financeRecords:
+                Array.isArray(appState.financeRecords)
+                    ? appState.financeRecords
+                    : [],
+
+            customers:
+                Array.isArray(appState.customers)
+                    ? appState.customers
+                    : [],
+
+            cart:
+                Array.isArray(appState.cart)
+                    ? appState.cart
+                    : [],
+
+            orders:
+                Array.isArray(appState.orders)
+                    ? appState.orders
+                    : [],
+
+            taskEarnBalance:
+                Number(appState.taskEarnBalance) || 0,
+
+            taskEarnTasks:
+                Array.isArray(appState.taskEarnTasks)
+                    ? appState.taskEarnTasks
+                    : [],
+
+            homeo:
+                Array.isArray(appState.homeo)
+                    ? appState.homeo
+                    : [],
+
+            aiHistory:
+                Array.isArray(appState.aiHistory)
+                    ? appState.aiHistory.slice(-40)
+                    : [],
+
+            updatedAt:
+                serverTimestamp()
+
+        };
+
+
+        // =================================================
+        // FIRESTORE PATH
+        //
+        // users
+        //   └── USER UID
+        //       └── nivora
+        //           └── state
+        // =================================================
+
+        const stateRef = doc(
+            firebase.db,
+            "users",
+            uid,
+            "nivora",
+            "state"
+        );
+
+
+        await setDoc(
+            stateRef,
+            userData,
+            {
+                merge: true
+            }
+        );
+
+
+        console.log(
+            "NIVORA Firebase Save: SUCCESS"
+        );
+
+        return true;
+
+
+    } catch (error) {
+
+        console.error(
+            "NIVORA Firebase Save Error:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+// =====================================================
+// MAIN saveState()
+// পুরোনো অ্যাপের সব saveState() এখন এটিই ব্যবহার করবে
+// =====================================================
+
+async function saveState() {
+
+    // -----------------------------------------------
+    // 1. আগে LocalStorage-এ Save
+    // -----------------------------------------------
+
+    saveLocalState();
+
+
+    // -----------------------------------------------
+    // 2. Cart Badge Update
+    // -----------------------------------------------
+
+    try {
+
+        if (
+            typeof updateCartBadge === "function"
+        ) {
+            updateCartBadge();
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "NIVORA Cart Badge Error:",
+            error
+        );
+
+    }
+
+
+    // -----------------------------------------------
+    // 3. Firebase-এ Save
+    // -----------------------------------------------
+
+    try {
+
+        saveNivoraToFirebase()
+            .then(function(success) {
+
+                if (success) {
+
+                    console.log(
+                        "NIVORA Firebase Sync Complete"
+                    );
+
+                }
+
+            })
+            .catch(function(error) {
+
+                console.error(
+                    "NIVORA Firebase Sync Error:",
+                    error
+                );
+
+            });
+
+    } catch (error) {
+
+        console.error(
+            "NIVORA Firebase Sync Start Error:",
+            error
+        );
+
+    }
+}
+
+
+// =====================================================
+// GLOBAL FIREBASE SYNC OBJECT
+// =====================================================
+
+window.NIVORA_FIREBASE_SYNC = {
+
+    save: saveNivoraToFirebase,
+
+    saveLocal: saveLocalState,
+
+    getUserId: getNivoraUserId
+
+};
+
+
+console.log(
+    "NIVORA STEP 8 FIREBASE SYNC READY"
+);// =====================================================
+// NIVORA ONE - STEP 9
+// FIREBASE FIRESTORE DATA LOAD
+// =====================================================
+
+async function loadNivoraFromFirebase() {
+    try {
+        const firebase = getNivoraFirebase();
+        const uid = getNivoraUserId();
+
+        if (!firebase || !firebase.db || !uid) {
+            console.log("NIVORA Firebase Load skipped: User not logged in.");
+            return false;
+        }
+
+        const firestore = await import(
+            "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js"
+        );
+
+        const {
+            doc,
+            getDoc
+        } = firestore;
+
+        const stateRef = doc(
+            firebase.db,
+            "users",
+            uid,
+            "nivora",
+            "state"
+        );
+
+        const snapshot = await getDoc(stateRef);
+
+        // Firebase-এ এখনো কোনো ডেটা না থাকলে
+        // বর্তমান Local data মুছে ফেলা হবে না
+        if (!snapshot.exists()) {
+            console.log(
+                "NIVORA Firebase Load: No cloud data found."
+            );
+
+            // প্রথমবার Firebase-এ বর্তমান ডেটা সংরক্ষণ
+            await saveNivoraToFirebase();
+
+            return true;
+        }
+
+        const cloudData = snapshot.data();
+
+        // নিরাপদভাবে Firebase data appState-এ বসানো
+        if (Array.isArray(cloudData.products)) {
+            appState.products = cloudData.products;
+        }
+
+        if (Array.isArray(cloudData.shopProducts)) {
+            appState.shopProducts = cloudData.shopProducts;
+        }
+
+        if (Array.isArray(cloudData.financeRecords)) {
+            appState.financeRecords = cloudData.financeRecords;
+        }
+
+        if (Array.isArray(cloudData.customers)) {
+            appState.customers = cloudData.customers;
+        }
+
+        if (Array.isArray(cloudData.cart)) {
+            appState.cart = cloudData.cart;
+        }
+
+        if (Array.isArray(cloudData.orders)) {
+            appState.orders = cloudData.orders;
+        }
+
+        if (
+            cloudData.taskEarnBalance !== undefined &&
+            cloudData.taskEarnBalance !== null
+        ) {
+            appState.taskEarnBalance =
+                Number(cloudData.taskEarnBalance) || 0;
+        }
+
+        if (Array.isArray(cloudData.taskEarnTasks)) {
+            appState.taskEarnTasks =
+                cloudData.taskEarnTasks;
+        }
+
+        if (Array.isArray(cloudData.homeo)) {
+            appState.homeo = cloudData.homeo;
+        }
+
+        if (Array.isArray(cloudData.aiHistory)) {
+            appState.aiHistory = cloudData.aiHistory;
+        }
+
+        // LocalStorage-এও সর্বশেষ Firebase data রাখবে
+        saveLocalState();
+
+        // UI refresh
+        try {
+            if (typeof renderAll === "function") {
+                renderAll();
+            }
+        } catch (error) {
+            console.warn(
+                "NIVORA renderAll refresh skipped:",
+                error
+            );
+        }
+
+        try {
+            if (typeof updateCartBadge === "function") {
+                updateCartBadge();
+            }
+        } catch (error) {
+            console.warn(
+                "NIVORA cart badge refresh skipped:",
+                error
+            );
+        }
+
+        console.log(
+            "NIVORA Firebase Load: SUCCESS"
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "NIVORA Firebase Load Error:",
+            error
+        );
+
+        return false;
+    }
+}
+
+window.NIVORA_FIREBASE_SYNC = {
+    ...(window.NIVORA_FIREBASE_SYNC || {}),
+    load: loadNivoraFromFirebase
+};
+
+console.log(
+    "NIVORA STEP 9 FIREBASE LOAD READY"
+);
+
+        let navigationHistory = ['home'];
+
+        function navigateTo(viewId) {
+            document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) {
+                target.classList.remove('hidden');
+                if (viewId !== navigationHistory[navigationHistory.length - 1]) {
+                    navigationHistory.push(viewId);
+                }
+                document.getElementById('global-back-btn').classList.toggle('hidden', navigationHistory.length <= 1);
+                window.scrollTo(0, 0);
+                renderViewData(viewId);
+            }
+        }
+
+        function goBack() {
+            if (navigationHistory.length > 1) {
+                navigationHistory.pop();
+                const prevView = navigationHistory[navigationHistory.length - 1];
+                document.querySelectorAll('.app-view').forEach(v => v.classList.add('hidden'));
+                document.getElementById(`view-${prevView}`).classList.remove('hidden');
+                document.getElementById('global-back-btn').classList.toggle('hidden', navigationHistory.length <= 1);
+                renderViewData(prevView);
+            }
+        }
+
+        function renderViewData(viewId) {
+            if (viewId === 'business') { renderBusinessProducts(); renderFinanceReports(); populateProductSelects(); }
+            if (viewId === 'calculator') { startLiveClock(); }
+            if (viewId === 'bakikhata') { renderBakiCustomers(); }
+            if (viewId === 'ecommerce') { renderShopProducts(); }
+            if (viewId === 'cart') { renderCartItems(); }
+            if (viewId === 'taskearn') { renderTaskEarnList(); }
+            if (viewId === 'homeo') { renderHomeoRecords(); }
+            if (viewId === 'admin') { renderAdminStats(); }
+        }
+
+        // --- LIVE DIGITAL CLOCK & CALCULATOR LOGIC ---
+        function startLiveClock() {
+            updateClock();
+            if (!window.clockInterval) {
+                window.clockInterval = setInterval(updateClock, 1000);
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const dateString = now.toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            const clockEl = document.getElementById('clock-display');
+            const dateEl = document.getElementById('clock-date-display');
+            if (clockEl) clockEl.innerText = timeString;
+            if (dateEl) dateEl.innerText = dateString;
+        }
+
+        let calcInput = '0';
+        let calcHist = '';
+
+        function calcAppend(val) {
+            if (calcInput === '0' && !isNaN(val)) {
+                calcInput = val;
+            } else {
+                calcInput += val;
+            }
+            updateCalcDisplay();
+        }
+
+        function calcClear() {
+            calcInput = '0';
+            calcHist = '';
+            updateCalcDisplay();
+        }
+
+        function calcDel() {
+            calcInput = calcInput.length > 1 ? calcInput.slice(0, -1) : '0';
+            updateCalcDisplay();
+        }
+
+        function calcMath(fnStr) {
+            try {
+                calcHist = `${fnStr} ${calcInput})`;
+                calcInput = eval(fnStr + calcInput + ')').toString();
+            } catch (e) {
+                calcInput = 'Error';
+            }
+            updateCalcDisplay();
+        }
+
+        function calcCompute() {
+            try {
+                calcHist = calcInput + ' =';
+                // Safe evaluation for general calculator
+                calcInput = eval(calcInput.replace(/%/g, '/100')).toString();
+            } catch (e) {
+                calcInput = 'Error';
+            }
+            updateCalcDisplay();
+        }
+
+        function updateCalcDisplay() {
+            document.getElementById('calc-screen').innerText = calcInput;
+            document.getElementById('calc-history').innerText = calcHist;
+        }
+
+        // --- BUSINESS FINANCE (DAILY, WEEKLY, MONTHLY, YEARLY REPORTS WITH EDIT & DELETE) ---
+        function switchBusinessTab(tabName) {
+            document.querySelectorAll('.biz-tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.business-tab-btn').forEach(b => {
+                b.classList.remove('bg-brand-600', 'font-bold');
+                b.classList.add('bg-slate-800', 'font-medium', 'text-slate-300');
+            });
+            document.getElementById(`biz-tab-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.querySelector(`.business-tab-btn[data-tab="${tabName}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-slate-800', 'font-medium', 'text-slate-300');
+                activeBtn.classList.add('bg-brand-600', 'font-bold', 'text-white');
+            }
+            if (tabName === 'reports') renderFinanceReports();
+        }
+
+        function saveFinanceRecord() {
+            const id = document.getElementById('edit-finance-id').value;
+            const type = document.getElementById('fin-type').value;
+            const title = document.getElementById('fin-title').value.trim();
+            const amount = parseFloat(document.getElementById('fin-amount').value) || 0;
+            const date = document.getElementById('fin-date').value || new Date().toISOString().split('T')[0];
+
+            if (!title || amount <= 0) { alert('সঠিক বিবরণ ও পরিমাণ দিন'); return; }
+
+            if (id) {
+                const rec = appState.financeRecords.find(x => x.id === id);
+                if (rec) { rec.type = type; rec.title = title; rec.amount = amount; rec.date = date; }
+            } else {
+                appState.financeRecords.push({ id: 'fin-' + Date.now(), type, title, amount, date });
+            }
+            saveState();
+            resetFinanceForm();
+            renderFinanceReports();
+        }
+
+        function editFinanceRecord(id) {
+            const rec = appState.financeRecords.find(x => x.id === id);
+            if (!rec) return;
+            document.getElementById('edit-finance-id').value = rec.id;
+            document.getElementById('fin-type').value = rec.type;
+            document.getElementById('fin-title').value = rec.title;
+            document.getElementById('fin-amount').value = rec.amount;
+            document.getElementById('fin-date').value = rec.date;
+            document.getElementById('finance-form-title').innerText = 'আয়/ব্যয় রেকর্ড এডিট করুন';
+            document.getElementById('fin-cancel-btn').classList.remove('hidden');
+        }
+
+        function deleteFinanceRecord(id) {
+            if (confirm('রেকর্ডটি ডিলিট করতে চান?')) {
+                appState.financeRecords = appState.financeRecords.filter(x => x.id !== id);
+                saveState();
+                renderFinanceReports();
+            }
+        }
+
+        function resetFinanceForm() {
+            document.getElementById('edit-finance-id').value = '';
+            document.getElementById('fin-title').value = '';
+            document.getElementById('fin-amount').value = '';
+            document.getElementById('fin-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('finance-form-title').innerText = 'নতুন আয় বা ব্যয় এন্ট্রি করুন';
+            document.getElementById('fin-cancel-btn').classList.add('hidden');
+        }
+
+        function renderFinanceReports() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth();
+
+            let dailyNet = 0, weeklyNet = 0, monthlyNet = 0, yearlyNet = 0;
+
+            appState.financeRecords.forEach(r => {
+                const rDate = new Date(r.date);
+                const val = r.type === 'income' ? r.amount : -r.amount;
+
+                // Daily (Today)
+                if (r.date === todayStr) dailyNet += val;
+
+                // Weekly (Last 7 days)
+                const diffTime = Math.abs(now - rDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays <= 7) weeklyNet += val;
+
+                // Monthly
+                if (rDate.getFullYear() === currentYear && rDate.getMonth() === currentMonth) monthlyNet += val;
+
+                // Yearly
+                if (rDate.getFullYear() === currentYear) yearlyNet += val;
+            });
+
+            document.getElementById('rep-daily').innerText = `৳ ${dailyNet}`;
+            document.getElementById('rep-weekly').innerText = `৳ ${weeklyNet}`;
+            document.getElementById('rep-monthly').innerText = `৳ ${monthlyNet}`;
+            document.getElementById('rep-yearly').innerText = `৳ ${yearlyNet}`;
+
+            const list = document.getElementById('finance-records-list');
+            if (!list) return;
+            list.innerHTML = appState.financeRecords.length ? appState.financeRecords.map(r => `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                    <div>
+                        <div class="font-bold text-white">${r.title} (${r.date})</div>
+                        <div class="${r.type === 'income' ? 'text-emerald-400' : 'text-rose-400'} font-bold">${r.type === 'income' ? 'আয়' : 'ব্যয়'}: ৳${r.amount}</div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="editFinanceRecord('${r.id}')" class="text-blue-400 hover:underline px-2">এডিট</button>
+                        <button onclick="deleteFinanceRecord('${r.id}')" class="text-rose-400 hover:underline px-2">ডিলিট</button>
+                    </div>
+                </div>
+            `).join('') : '<div class="text-xs text-slate-500 text-center py-2">কোনো রেকর্ড নেই</div>';
+        }
+
+        // --- TASK EARN HUB (ADD, EDIT, DELETE) ---
+        function renderTaskEarnList() {
+            document.getElementById('taskearn-balance').innerText = `৳ ${appState.taskEarnBalance.toFixed(2)}`;
+            const list = document.getElementById('taskearn-list');
+            if (!list) return;
+            list.innerHTML = appState.taskEarnTasks.length ? appState.taskEarnTasks.map(t => `
+                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs gap-2">
+                    <div class="flex-1">
+                        <div class="font-bold text-white text-sm mb-0.5">${t.title}</div>
+                        <div class="text-amber-400 font-bold">+৳${t.reward} রিওয়ার্ড</div>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <button onclick="completeTask('${t.id}')" ${t.completed ? 'disabled' : ''} class="px-2.5 py-1.5 rounded-lg ${t.completed ? 'bg-slate-800 text-slate-500' : 'bg-amber-600 hover:bg-amber-500 text-white font-bold'} transition">
+                            ${t.completed ? 'সম্পন্ন' : 'কমপ্লিট'}
+                        </button>
+                        <button onclick="editTask('${t.id}')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-blue-400 transition"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteTask('${t.id}')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-rose-400 transition"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('') : '<div class="text-xs text-slate-500 text-center py-2">কোনো টাস্ক নেই</div>';
+        }
+
+        function saveTaskItem() {
+            const id = document.getElementById('edit-task-id').value;
+            const title = document.getElementById('task-title').value.trim();
+            const reward = parseFloat(document.getElementById('task-reward').value) || 0;
+            if (!title || reward <= 0) { alert('সঠিক শিরোনাম ও রিওয়ার্ড দিন'); return; }
+
+            if (id) {
+                const t = appState.taskEarnTasks.find(x => x.id === id);
+                if (t) { t.title = title; t.reward = reward; }
+            } else {
+                appState.taskEarnTasks.push({ id: 't-' + Date.now(), title, reward, completed: false });
+            }
+            saveState();
+            resetTaskForm();
+            renderTaskEarnList();
+        }
+
+        function editTask(id) {
+            const t = appState.taskEarnTasks.find(x => x.id === id);
+            if (!t) return;
+            document.getElementById('edit-task-id').value = t.id;
+            document.getElementById('task-title').value = t.title;
+            document.getElementById('task-reward').value = t.reward;
+            document.getElementById('task-form-title').innerText = 'টাস্ক এডিট করুন';
+            document.getElementById('task-cancel-btn').classList.remove('hidden');
+        }
+
+        function deleteTask(id) {
+            if (confirm('টাস্কটি ডিলিট করতে চান?')) {
+                appState.taskEarnTasks = appState.taskEarnTasks.filter(x => x.id !== id);
+                saveState();
+                renderTaskEarnList();
+            }
+        }
+
+        function resetTaskForm() {
+            document.getElementById('edit-task-id').value = '';
+            document.getElementById('task-title').value = '';
+            document.getElementById('task-reward').value = '';
+            document.getElementById('task-form-title').innerText = 'নতুন টাস্ক যুক্ত করুন';
+            document.getElementById('task-cancel-btn').classList.add('hidden');
+        }
+
+        function completeTask(id) {
+            const t = appState.taskEarnTasks.find(x => x.id === id);
+            if (t && !t.completed) {
+                t.completed = true;
+                appState.taskEarnBalance += t.reward;
+                saveState();
+                renderTaskEarnList();
+                alert(`অভিনন্দন! আপনি ৳${t.reward} অর্জন করেছেন।`);
+            }
+        }
+
+        // --- E-COMMERCE MANAGER (ADD, EDIT, DELETE & SHARE URL) ---
+        function renderShopProducts() {
+            const grid = document.getElementById('shop-products-grid');
+            if (!grid) return;
+            grid.innerHTML = appState.shopProducts.length ? appState.shopProducts.map(p => `
+                <div class="glass-panel p-3.5 rounded-2xl flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="w-full h-24 rounded-xl bg-slate-900 flex items-center justify-center text-brand-500 text-2xl mb-2 overflow-hidden">
+                            ${p.image ? `<img src="${p.image}" class="w-full h-full object-cover">` : '<i class="fa-solid fa-box-open"></i>'}
+                        </div>
+                        <h4 class="font-bold text-sm text-white line-clamp-1">${p.name}</h4>
+                        <div class="text-brand-400 font-black text-sm">৳${p.price}</div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <button onclick="addToCartShop('${p.id}')" class="bg-brand-600 hover:bg-brand-500 text-white rounded-xl py-2 text-xs font-bold transition">কার্টে নিন</button>
+                        <button onclick="shareProductURL('${p.name}', ${p.price})" class="bg-slate-800 hover:bg-slate-700 text-purple-400 rounded-xl py-2 text-xs font-bold transition"><i class="fa-solid fa-share-nodes"></i> শেয়ার</button>
+                    </div>
+                    <div class="flex items-center justify-end space-x-1 pt-1 border-t border-slate-800 text-xs">
+                        <button onclick="editShopProduct('${p.id}')" class="text-blue-400 hover:underline px-2">এডিট</button>
+                        <button onclick="deleteShopProduct('${p.id}')" class="text-rose-400 hover:underline px-2">ডিলিট</button>
+                    </div>
+                </div>
+            `).join('') : '<div class="text-xs text-slate-500 text-center py-4 col-span-full">কোনো প্রোডাক্ট নেই</div>';
+        }
+
+        function saveShopProduct() {
+            const id = document.getElementById('edit-shop-id').value;
+            const name = document.getElementById('shop-name').value.trim();
+            const price = parseFloat(document.getElementById('shop-price').value) || 0;
+            const image = document.getElementById('shop-image').value.trim();
+            if (!name || price <= 0) { alert('সঠিক নাম ও মূল্য দিন'); return; }
+
+            if (id) {
+                const p = appState.shopProducts.find(x => x.id === id);
+                if (p) { p.name = name; p.price = price; p.image = image; }
+            } else {
+                appState.shopProducts.push({ id: 's-' + Date.now(), name, price, image });
+            }
+            saveState();
+            resetShopForm();
+            renderShopProducts();
+        }
+
+        function editShopProduct(id) {
+            const p = appState.shopProducts.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('edit-shop-id').value = p.id;
+            document.getElementById('shop-name').value = p.name;
+            document.getElementById('shop-price').value = p.price;
+            document.getElementById('shop-image').value = p.image;
+            document.getElementById('shop-form-title').innerText = 'ই-কমার্স প্রোডাক্ট এডিট করুন';
+            document.getElementById('shop-cancel-btn').classList.remove('hidden');
+        }
+
+        function deleteShopProduct(id) {
+            if (confirm('প্রোডাক্টটি ডিলিট করতে চান?')) {
+                appState.shopProducts = appState.shopProducts.filter(x => x.id !== id);
+                saveState();
+                renderShopProducts();
+            }
+        }
+
+        function resetShopForm() {
+            document.getElementById('edit-shop-id').value = '';
+            document.getElementById('shop-name').value = '';
+            document.getElementById('shop-price').value = '';
+            document.getElementById('shop-image').value = '';
+            document.getElementById('shop-form-title').innerText = 'নতুন ই-কমার্স প্রোডাক্ট যুক্ত করুন';
+            document.getElementById('shop-cancel-btn').classList.add('hidden');
+        }
+
+        function shareProductURL(name, price) {
+            const shareText = `Check out ${name} for ৳${price} on NIVORA ONE!`;
+            if (navigator.share) {
+                navigator.share({ title: name, text: shareText, url: window.location.href }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('প্রোডাক্ট লিংক ক্লিপবোর্ডে কপি করা হয়েছে!');
+            }
+        }
+
+        function addToCartShop(id) {
+            const prod = appState.shopProducts.find(p => p.id === id);
+            if (!prod) return;
+            const existing = appState.cart.find(item => item.id === id);
+            if (existing) { existing.qty += 1; } else { appState.cart.push({ id: prod.id, name: prod.name, price: prod.price, qty: 1 }); }
+            saveState();
+            alert('কার্টে যোগ করা হয়েছে!');
+        }
+
+        // --- Business Products & Other Helpers ---
+        function saveBusinessProduct() {
+            const name = document.getElementById('prod-name').value.trim();
+            const code = document.getElementById('prod-code').value.trim();
+            const category = document.getElementById('prod-category').value.trim();
+            const pprice = parseFloat(document.getElementById('prod-pprice').value) || 0;
+            const sprice = parseFloat(document.getElementById('prod-sprice').value) || 0;
+            const qty = parseInt(document.getElementById('prod-qty').value) || 0;
+            if (!name) { alert('প্রোডাক্টের নাম দিন'); return; }
+            appState.products.push({ id: Date.now().toString(), name, code, category, pprice, sprice, qty });
+            saveState();
+            renderBusinessProducts();
+            alert('প্রোডাক্ট সংরক্ষিত হয়েছে!');
+        }
+
+        function renderBusinessProducts() {
+            const search = (document.getElementById('prod-search')?.value || '').toLowerCase();
+            const list = document.getElementById('business-products-list');
+            if (!list) return;
+            const filtered = appState.products.filter(p => p.name.toLowerCase().includes(search));
+            list.innerHTML = filtered.length ? filtered.map(p => `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                    <div>
+                        <div class="font-bold text-white">${p.name}</div>
+                        <div class="text-slate-400">ক্রয়: ৳${p.pprice} | বিক্রয়: ৳${p.sprice} | স্টক: <span class="text-emerald-400">${p.qty}</span></div>
+                    </div>
+                </div>
+            `).join('') : '<div class="text-xs text-slate-500 text-center py-2">কোনো প্রোডাক্ট পাওয়া যায়নি</div>';
+        }
+
+        function populateProductSelects() {
+            ['pur-product-select', 'sale-product-select'].forEach(id => {
+                const sel = document.getElementById(id);
+                if (sel) {
+                    sel.innerHTML = appState.products.map(p => `<option value="${p.id}">${p.name} (স্টক: ${p.qty})</option>`).join('');
+                }
+            });
+        }
+
+        function addPurchaseEntry() {
+            const supplier = document.getElementById('pur-supplier').value.trim();
+            const prodId = document.getElementById('pur-product-select').value;
+            const qty = parseInt(document.getElementById('pur-qty').value) || 0;
+            if (!supplier || qty <= 0) { alert('সঠিক তথ্য দিন'); return; }
+            const prod = appState.products.find(p => p.id === prodId);
+            if (prod) prod.qty += qty;
+            saveState();
+            alert('পারচেজ সফল হয়েছে!');
+        }
+
+        function addSalesEntry() {
+            const customer = document.getElementById('sale-customer').value.trim();
+            const prodId = document.getElementById('sale-product-select').value;
+            const qty = parseInt(document.getElementById('sale-qty').value) || 0;
+            if (!customer || qty <= 0) { alert('সঠিক তথ্য দিন'); return; }
+            const prod = appState.products.find(p => p.id === prodId);
+            if (prod) {
+                if (prod.qty < qty) { alert('স্টকে পর্যাপ্ত পরিমাণ নেই!'); return; }
+                prod.qty -= qty;
+            }
+            saveState();
+            alert('সেলস সফল হয়েছে!');
+        }
+
+        // --- Baki Khata & Cart Helpers ---
+        function openAddCustomerModal() {
+            const name = prompt('কাস্টমার নাম দিন:');
+            if (!name) return;
+            const due = parseFloat(prompt('প্রারম্ভিক বাকি (টাকা):') || '0');
+            appState.customers.push({ id: Date.now().toString(), name, due, paid: 0 });
+            saveState();
+            renderBakiCustomers();
+        }
+
+        function renderBakiCustomers() {
+            const list = document.getElementById('baki-customers-list');
+            if (!list) return;
+            list.innerHTML = appState.customers.length ? appState.customers.map(c => `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                    <div>
+                        <div class="font-bold text-white">${c.name}</div>
+                        <div class="text-slate-400">বাকি: <span class="text-rose-400 font-bold">৳${c.due}</span></div>
+                    </div>
+                </div>
+            `).join('') : '<div class="text-xs text-slate-500 text-center py-2">কোনো কাস্টমার নেই</div>';
+        }
+
+        function updateCartBadge() {
+            const total = appState.cart.reduce((a, b) => a + b.qty, 0);
+            const badge = document.getElementById('cart-badge');
+            if (badge) badge.innerText = total;
+        }
+
+        function renderCartItems() {
+            const list = document.getElementById('cart-items-list');
+            if (!list) return;
+            const subtotal = appState.cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            document.getElementById('cart-subtotal').innerText = `৳ ${subtotal}`;
+            document.getElementById('cart-grandtotal').innerText = `৳ ${subtotal > 0 ? subtotal + 60 : 0}`;
+            list.innerHTML = appState.cart.length ? appState.cart.map(item => `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                    <div><div class="font-bold text-white">${item.name}</div><div class="text-slate-400">৳${item.price} x ${item.qty}</div></div>
+                    <span class="font-bold text-brand-400">৳${item.price * item.qty}</span>
+                </div>
+            `).join('') : '<div class="text-xs text-slate-500 text-center py-4">কার্ট খালি আছে</div>';
+        }
+
+        function placeOrder() {
+            const name = document.getElementById('checkout-name').value.trim();
+            const phone = document.getElementById('checkout-phone').value.trim();
+            const address = document.getElementById('checkout-address').value.trim();
+            if (!name || !phone || !address || appState.cart.length === 0) { alert('সঠিক তথ্য দিন'); return; }
+            const order = {
+                id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
+                name, phone, address,
+                total: appState.cart.reduce((a, b) => a + (b.price * b.qty), 0) + 60,
+                status: 'Pending'
+            };
+            appState.orders.push(order);
+            appState.cart = [];
+            saveState();
+            alert(`অর্ডার সফল হয়েছে! আইডি: ${order.id}`);
+            navigateTo('home');
+        }
+
+        // --- Homeo & Admin ---
+        function saveHomeoRecord() {
+            const patient = document.getElementById('homeo-patient').value.trim();
+            const symptom = document.getElementById('homeo-symptom').value.trim();
+            if (!patient) return;
+            appState.homeo.push({ id: Date.now().toString(), patient, symptom, date: new Date().toLocaleDateString() });
+            saveState();
+            renderHomeoRecords();
+            alert('হোমিও রেকর্ড সংরক্ষিত হয়েছে!');
+        }
+
+        function renderHomeoRecords() {
+            const list = document.getElementById('homeo-records-list');
+            if (!list) return;
+            list.innerHTML = appState.homeo.length ? appState.homeo.map(h => `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
+                    <div class="font-bold text-teal-400">${h.patient}</div>
+                    <div class="text-slate-300">নোট: ${h.symptom}</div>
+                </div>
+            `).join('') : '<div class="text-xs text-slate-500 text-center py-2">কোনো রেকর্ড নেই</div>';
+        }
+
+        function renderAdminStats() {
+            document.getElementById('admin-stat-products').innerText = appState.shopProducts.length;
+            document.getElementById('admin-stat-orders').innerText = appState.orders.length;
+            document.getElementById('admin-stat-customers').innerText = appState.customers.length;
+            document.getElementById('admin-stat-tasks').innerText = appState.taskEarnTasks.length;
+        }
+
+        function exportAppData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "nivora_backup.json");
+            dlAnchorElem.click();
+        }
+
+        function resetAppData() {
+            if (confirm('সব ডেটা রিসেট করতে চান?')) { localStorage.clear(); location.reload(); }
+        }
+
+        // --- AI Chat ---
+        
+// =====================================================
+// NIVORA AI - COMPLETE FRONTEND AI MODULE
+// =====================================================
+
+let nivoraAIIsBusy = false;
+let nivoraAIRecognition = null;
+
+
+// -----------------------------------------------------
+// নিরাপদ HTML Text
+// -----------------------------------------------------
+function escapeAIText(text) {
+    return String(text ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+
+// -----------------------------------------------------
+// AI Chat Container
+// -----------------------------------------------------
+function getAIChatContainer() {
+    return document.getElementById('ai-chat-container');
+}
+
+function scrollAIChatToBottom() {
+    const container = getAIChatContainer();
+    if (container) {
+        setTimeout(() => {
+            container.scrollTop = container.scrollHeight;
+        }, 50);
+    }
+}
+
+
+// -----------------------------------------------------
+// AI Message UI
+// -----------------------------------------------------
+function addAIUserMessage(message) {
+    const container = getAIChatContainer();
+    if (!container) return;
+
+    const safeMessage = escapeAIText(message);
+
+    container.insertAdjacentHTML('beforeend', `
+        <div class="flex items-start justify-end space-x-3">
+            <div class="glass-panel bg-brand-600/25 p-3.5 rounded-2xl rounded-tr-none max-w-[85%] text-sm text-slate-200 leading-relaxed whitespace-pre-wrap break-words">
+                ${safeMessage}
+            </div>
+
+            <div class="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                ইউজার
+            </div>
+        </div>
+    `);
+
+    scrollAIChatToBottom();
+}
+
+
+function addAIMessage(message, type = 'normal') {
+    const container = getAIChatContainer();
+    if (!container) return;
+
+    const safeMessage = escapeAIText(message);
+
+    let avatarClass = 'bg-purple-600';
+    let textClass = 'text-slate-200';
+
+    if (type === 'error') {
+        avatarClass = 'bg-rose-600';
+        textClass = 'text-rose-300';
+    }
+
+    container.insertAdjacentHTML('beforeend', `
+        <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-lg ${avatarClass} text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                AI
+            </div>
+
+            <div class="glass-panel bg-slate-900/90 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-sm ${textClass} leading-relaxed whitespace-pre-wrap break-words">
+                ${safeMessage}
+            </div>
+        </div>
+    `);
+
+    scrollAIChatToBottom();
+}
+
+
+// -----------------------------------------------------
+// Typing / Loading Message
+// -----------------------------------------------------
+function showAITyping() {
+    const container = getAIChatContainer();
+    if (!container) return;
+
+    removeAITyping();
+
+    container.insertAdjacentHTML('beforeend', `
+        <div id="nivora-ai-typing" class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                AI
+            </div>
+
+            <div class="glass-panel bg-slate-900/90 p-3.5 rounded-2xl rounded-tl-none text-sm text-slate-400">
+                <span>AI উত্তর তৈরি করছে</span>
+                <span class="animate-pulse">...</span>
+            </div>
+        </div>
+    `);
+
+    scrollAIChatToBottom();
+}
+
+
+function removeAITyping() {
+    const typing = document.getElementById('nivora-ai-typing');
+
+    if (typing) {
+        typing.remove();
+    }
+}
+
+
+// -----------------------------------------------------
+// Chat Clear
+// -----------------------------------------------------
+function clearAIChat() {
+    if (nivoraAIIsBusy) {
+        alert('AI উত্তর তৈরি করছে। একটু অপেক্ষা করুন।');
+        return;
+    }
+
+    if (typeof appState !== 'undefined') {
+        appState.aiHistory = [];
+
+        if (typeof saveState === 'function') {
+            saveState();
+        }
+    }
+
+    const container = getAIChatContainer();
+
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                AI
+            </div>
+
+            <div class="glass-panel bg-slate-900/90 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-sm text-slate-200 leading-relaxed">
+                চ্যাট পরিষ্কার করা হয়েছে। আবার আপনার প্রশ্ন করুন।
+            </div>
+        </div>
+    `;
+
+    scrollAIChatToBottom();
+}
+
+
+// -----------------------------------------------------
+// App Data Context তৈরি
+// -----------------------------------------------------
+function buildNivoraAIContext() {
+
+    try {
+
+        if (typeof appState === 'undefined') {
+            return {};
+        }
+
+        /*
+         * পুরো appState সরাসরি পাঠানো হচ্ছে না।
+         * প্রয়োজনীয় তথ্য পাঠানো হচ্ছে যাতে AI
+         * Business / Stock / Customer / Order / Task /
+         * Homeo ইত্যাদি বুঝতে পারে।
+         */
+
+        return {
+            shopProducts: Array.isArray(appState.shopProducts)
+                ? appState.shopProducts
+                : [],
+
+            orders: Array.isArray(appState.orders)
+                ? appState.orders
+                : [],
+
+            customers: Array.isArray(appState.customers)
+                ? appState.customers
+                : [],
+
+            taskEarnTasks: Array.isArray(appState.taskEarnTasks)
+                ? appState.taskEarnTasks
+                : [],
+
+            homeo: Array.isArray(appState.homeo)
+                ? appState.homeo
+                : [],
+
+            income: Array.isArray(appState.income)
+                ? appState.income
+                : [],
+
+            expenses: Array.isArray(appState.expenses)
+                ? appState.expenses
+                : [],
+
+            purchases: Array.isArray(appState.purchases)
+                ? appState.purchases
+                : [],
+
+            sales: Array.isArray(appState.sales)
+                ? appState.sales
+                : [],
+
+            baki: Array.isArray(appState.baki)
+                ? appState.baki
+                : [],
+
+            cart: Array.isArray(appState.cart)
+                ? appState.cart
+                : []
+        };
+
+    } catch (error) {
+
+        console.error('NIVORA AI context error:', error);
+
+        return {};
+    }
+}
+
+
+// -----------------------------------------------------
+// AI History তৈরি
+// -----------------------------------------------------
+function getNivoraAIHistory() {
+
+    if (
+        typeof appState !== 'undefined' &&
+        Array.isArray(appState.aiHistory)
+    ) {
+        return appState.aiHistory.slice(-20);
+    }
+
+    return [];
+}
+
+
+// -----------------------------------------------------
+// AI History Save
+// -----------------------------------------------------
+function saveNivoraAIHistory(prompt, reply) {
+
+    if (typeof appState === 'undefined') {
+        return;
+    }
+
+    if (!Array.isArray(appState.aiHistory)) {
+        appState.aiHistory = [];
+    }
+
+    appState.aiHistory.push({
+        role: 'user',
+        content: prompt,
+        timestamp: new Date().toISOString()
+    });
+
+    appState.aiHistory.push({
+        role: 'assistant',
+        content: reply,
+        timestamp: new Date().toISOString()
+    });
+
+    /*
+     * অতিরিক্ত বড় history জমতে দেওয়া হবে না।
+     */
+    if (appState.aiHistory.length > 40) {
+        appState.aiHistory =
+            appState.aiHistory.slice(-40);
+    }
+
+    if (typeof saveState === 'function') {
+        saveState();
+    }
+}
+
+
+// -----------------------------------------------------
+// API Error Message
+// -----------------------------------------------------
+function getAIErrorMessage(response, data) {
+
+    if (data && data.error) {
+        if (typeof data.error === 'string') {
+            return data.error;
+        }
+
+        if (data.error.message) {
+            return data.error.message;
+        }
+    }
+
+    if (response.status === 401) {
+        return 'AI API অনুমোদন পাওয়া যায়নি। Server API configuration পরীক্ষা করুন।';
+    }
+
+    if (response.status === 403) {
+        return 'AI API access অনুমোদিত নয়। API key বা permission পরীক্ষা করুন।';
+    }
+
+    if (response.status === 404) {
+        return 'AI server route পাওয়া যায়নি। /api/ai/chat route পরীক্ষা করুন।';
+    }
+
+    if (response.status === 429) {
+        return 'AI service-এর request limit অতিক্রম হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।';
+    }
+
+    if (response.status >= 500) {
+        return 'AI server-এ সমস্যা হয়েছে। Server configuration পরীক্ষা করুন।';
+    }
+
+    return 'AI থেকে সঠিক উত্তর পাওয়া যায়নি। আবার চেষ্টা করুন।';
+}
+
+
+// -----------------------------------------------------
+// Main AI Send Function
+// -----------------------------------------------------
+async function sendAIMessage() {
+
+    if (nivoraAIIsBusy) {
+        return;
+    }
+
+    const input = document.getElementById('ai-user-input');
+    const sendButton = document.querySelector(
+        'button[onclick="sendAIMessage()"]'
+    );
+
+    if (!input) {
+        console.error('ai-user-input পাওয়া যায়নি।');
+        return;
+    }
+
+    const prompt = input.value.trim();
+
+    if (!prompt) {
+        return;
+    }
+
+    nivoraAIIsBusy = true;
+
+    // User message দেখানো
+    addAIUserMessage(prompt);
+
+    // Input পরিষ্কার
+    input.value = '';
+
+    // Button temporarily disable
+    if (sendButton) {
+        sendButton.disabled = true;
+        sendButton.style.opacity = '0.6';
+    }
+
+    // Typing indicator
+    showAITyping();
+
+    try {
+
+        const context = buildNivoraAIContext();
+        const history = getNivoraAIHistory();
+
+        const requestBody = {
+            prompt: prompt,
+            context: context,
+            history: history,
+
+            app: {
+                name: 'NIVORA AI',
+                language: 'bn-BD',
+                mode: 'professional-assistant'
+            }
+        };
+
+const response = await fetch('/api/ai-chat', {
+        
+            method: 'POST',
+
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+
+            body: JSON.stringify(requestBody)
+        });
+
+
+        let data = {};
+
+        try {
+            data = await response.json();
+        } catch (jsonError) {
+
+            throw new Error(
+                'AI server থেকে valid JSON response পাওয়া যায়নি।'
+            );
+        }
+
+
+        removeAITyping();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                getAIErrorMessage(response, data)
+            );
+        }
+
+
+        /*
+         * Backend বিভিন্ন নাম ব্যবহার করলে
+         * সেগুলো থেকেও reply নেওয়া হবে।
+         */
+
+        const reply =
+            data.reply ||
+            data.response ||
+            data.message ||
+            data.text ||
+            data.output;
+
+
+        if (!reply) {
+
+            throw new Error(
+                'AI server response-এ কোনো উত্তর পাওয়া যায়নি।'
+            );
+        }
+
+
+        const finalReply = String(reply).trim();
+
+        addAIMessage(finalReply);
+
+        saveNivoraAIHistory(
+            prompt,
+            finalReply
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            'NIVORA AI Error:',
+            error
+        );
+
+        removeAITyping();
+
+        addAIMessage(
+            error.message ||
+            'AI সংযোগে সমস্যা হয়েছে।',
+            'error'
+        );
+
+    } finally {
+
+        nivoraAIIsBusy = false;
+
+        if (sendButton) {
+            sendButton.disabled = false;
+            sendButton.style.opacity = '1';
+        }
+
+        input.focus();
+
+        scrollAIChatToBottom();
+    }
+}
+
+
+// -----------------------------------------------------
+// Enter Key
+// -----------------------------------------------------
+function handleAIKeypress(e) {
+
+    if (!e) return;
+
+    if (e.key === 'Enter') {
+
+        /*
+         * Shift + Enter হলে নতুন line।
+         * শুধু Enter হলে Send।
+         */
+
+        if (e.shiftKey) {
+            return;
+        }
+
+        e.preventDefault();
+
+        sendAIMessage();
+    }
+}
+
+
+// -----------------------------------------------------
+// Voice Input
+// -----------------------------------------------------
+function triggerVoiceInput() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    if (!SpeechRecognition) {
+
+        alert(
+            'এই ব্রাউজারে Voice Input সমর্থিত নয়। Chrome-এর সর্বশেষ সংস্করণ ব্যবহার করুন।'
+        );
+
+        return;
+    }
+
+
+    if (nivoraAIRecognition) {
+
+        try {
+            nivoraAIRecognition.stop();
+        } catch (e) {}
+
+        nivoraAIRecognition = null;
+    }
+
+
+    const input =
+        document.getElementById('ai-user-input');
+
+
+    if (!input) {
+        return;
+    }
+
+
+    const recognition =
+        new SpeechRecognition();
+
+
+    nivoraAIRecognition =
+        recognition;
+
+
+    recognition.lang = 'bn-BD';
+
+    recognition.interimResults = true;
+
+    recognition.continuous = false;
+
+    recognition.maxAlternatives = 1;
+
+
+    recognition.onstart = () => {
+
+        input.placeholder =
+            'শুনছি... কথা বলুন';
+
+        input.style.borderColor =
+            'rgb(168 85 247)';
+    };
+
+
+    recognition.onresult = (event) => {
+
+        let transcript = '';
+
+        for (
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+        ) {
+
+            transcript +=
+                event.results[i][0].transcript;
+        }
+
+
+        if (transcript.trim()) {
+
+            input.value =
+                transcript.trim();
+        }
+    };
+
+
+    recognition.onerror = (event) => {
+
+        console.error(
+            'Voice recognition error:',
+            event.error
+        );
+
+        if (event.error === 'not-allowed') {
+
+            alert(
+                'Microphone permission দেওয়া হয়নি।'
+            );
+
+        } else if (event.error !== 'no-speech') {
+
+            alert(
+                'Voice Input-এ সমস্যা হয়েছে। আবার চেষ্টা করুন।'
+            );
+        }
+    };
+
+
+    recognition.onend = () => {
+
+        input.placeholder =
+            'আপনার প্রশ্ন লিখুন...';
+
+        input.style.borderColor = '';
+
+        nivoraAIRecognition =
+            null;
+    };
+
+
+    try {
+
+        recognition.start();
+
+    } catch (error) {
+
+        console.error(
+            'Voice start error:',
+            error
+        );
+
+        nivoraAIRecognition =
+            null;
+    }
+}
+
+
+// -----------------------------------------------------
+// AI Chat History Restore
+// -----------------------------------------------------
+function restoreAIChatHistory() {
+
+    const container =
+        getAIChatContainer();
+
+
+    if (!container) {
+        return;
+    }
+
+
+    if (
+        typeof appState === 'undefined' ||
+        !Array.isArray(appState.aiHistory) ||
+        appState.aiHistory.length === 0
+    ) {
+        return;
+    }
+
+
+    const history =
+        appState.aiHistory.slice(-20);
+
+
+    /*
+     * প্রথমে existing welcome message রাখা হচ্ছে।
+     * তারপর saved history যোগ হবে।
+     */
+
+    history.forEach(item => {
+
+        if (!item) return;
+
+        const role =
+            item.role || '';
+
+        const content =
+            item.content ||
+            item.text ||
+            item.message ||
+            '';
+
+
+        if (!content) return;
+
+
+        if (
+            role === 'user' ||
+            role === 'human'
+        ) {
+
+            addAIUserMessage(content);
+
+        } else {
+
+            addAIMessage(content);
+        }
+    });
+}
+
+
+// -----------------------------------------------------
+// AI Module Startup
+// -----------------------------------------------------
+function initializeNivoraAI() {
+
+    const input =
+        document.getElementById('ai-user-input');
+
+
+    if (input) {
+
+        input.addEventListener(
+            'keydown',
+            handleAIKeypress
+        );
+    }
+
+
+    /*
+     * Existing HTML-এ inline onkeypress আছে।
+     * তাই duplicate Send আটকাতে inline handler
+     *-এর উপর নির্ভর করা হচ্ছে।
+     */
+
+    scrollAIChatToBottom();
+}
+
+
+// =====================================================
+// END NIVORA AI MODULE
+// =====================================================
+
+        // =====================================================
+        // NIVORA ONE - STABILITY PATCH
+        // Fix: Back button + Save buttons + broken event handlers
+        // =====================================================
+
+        function nivoraSafeRender(viewId) {
+            try {
+                if (typeof renderViewData === "function") {
+                    renderViewData(viewId);
+                }
+            } catch (error) {
+                console.error("NIVORA render error:", error);
+            }
+        }
+
+        function navigateTo(viewId) {
+            try {
+                const target = document.getElementById("view-" + viewId);
+                if (!target) {
+                    console.warn("NIVORA: view not found:", viewId);
+                    return;
+                }
+
+                document.querySelectorAll(".app-view").forEach(function(view) {
+                    view.classList.add("hidden");
+                });
+
+                target.classList.remove("hidden");
+
+                if (
+                    !Array.isArray(window.nivoraNavigationHistory) ||
+                    window.nivoraNavigationHistory.length === 0
+                ) {
+                    window.nivoraNavigationHistory = ["home"];
+                }
+
+                const last =
+                    window.nivoraNavigationHistory[
+                        window.nivoraNavigationHistory.length - 1
+                    ];
+
+                if (last !== viewId) {
+                    window.nivoraNavigationHistory.push(viewId);
+                }
+
+                const backButton =
+                    document.getElementById("global-back-btn");
+
+                if (backButton) {
+                    backButton.classList.toggle(
+                        "hidden",
+                        window.nivoraNavigationHistory.length <= 1
+                    );
+                }
+
+                window.scrollTo(0, 0);
+                nivoraSafeRender(viewId);
+
+            } catch (error) {
+                console.error("NIVORA navigation error:", error);
+            }
+        }
+
+        function goBack() {
+            try {
+                if (
+                    !Array.isArray(window.nivoraNavigationHistory) ||
+                    window.nivoraNavigationHistory.length <= 1
+                ) {
+                    return;
+                }
+
+                window.nivoraNavigationHistory.pop();
+
+                const previousView =
+                    window.nivoraNavigationHistory[
+                        window.nivoraNavigationHistory.length - 1
+                    ];
+
+                const target =
+                    document.getElementById("view-" + previousView);
+
+                if (!target) {
+                    window.nivoraNavigationHistory = ["home"];
+                    const home =
+                        document.getElementById("view-home");
+                    if (home) home.classList.remove("hidden");
+                    return;
+                }
+
+                document.querySelectorAll(".app-view").forEach(function(view) {
+                    view.classList.add("hidden");
+                });
+
+                target.classList.remove("hidden");
+
+                const backButton =
+                    document.getElementById("global-back-btn");
+
+                if (backButton) {
+                    backButton.classList.toggle(
+                        "hidden",
+                        window.nivoraNavigationHistory.length <= 1
+                    );
+                }
+
+                window.scrollTo(0, 0);
+                nivoraSafeRender(previousView);
+
+            } catch (error) {
+                console.error("NIVORA back button error:", error);
+            }
+        }
+
+        function saveState() {
+            try {
+                const safe = function(value, fallback) {
+                    try {
+                        return JSON.stringify(
+                            value === undefined ? fallback : value
+                        );
+                    } catch (error) {
+                        return JSON.stringify(fallback);
+                    }
+                };
+
+                localStorage.setItem(
+                    "nivora_products",
+                    safe(appState.products, [])
+                );
+                localStorage.setItem(
+                    "nivora_shop",
+                    safe(appState.shopProducts, [])
+                );
+                localStorage.setItem(
+                    "nivora_finance",
+                    safe(appState.financeRecords, [])
+                );
+                localStorage.setItem(
+                    "nivora_customers",
+                    safe(appState.customers, [])
+                );
+                localStorage.setItem(
+                    "nivora_cart",
+                    safe(appState.cart, [])
+                );
+                localStorage.setItem(
+                    "nivora_orders",
+                    safe(appState.orders, [])
+                );
+                localStorage.setItem(
+                    "nivora_taskearn_bal",
+                    String(Number(appState.taskEarnBalance) || 0)
+                );
+                localStorage.setItem(
+                    "nivora_taskearn_tasks",
+                    safe(appState.taskEarnTasks, [])
+                );
+                localStorage.setItem(
+                    "nivora_homeo",
+                    safe(appState.homeo, [])
+                );
+                localStorage.setItem(
+                    "nivora_ai_history",
+                    safe(appState.aiHistory, [])
+                );
+
+                try {
+                    if (typeof updateCartBadge === "function") {
+                        updateCartBadge();
+                    }
+                } catch (error) {
+                    console.warn("Cart badge update skipped:", error);
+                }
+
+                // Firebase is optional. Local Save must never depend on it.
+                try {
+                    if (
+                        window.NIVORA_FIREBASE_SYNC &&
+                        typeof window.NIVORA_FIREBASE_SYNC.save === "function"
+                    ) {
+                        Promise.resolve(
+                            window.NIVORA_FIREBASE_SYNC.save()
+                        ).catch(function(error) {
+                            console.warn(
+                                "NIVORA cloud save skipped:",
+                                error
+                            );
+                        });
+                    }
+                } catch (error) {
+                    console.warn("NIVORA cloud save start skipped:", error);
+                }
+
+                console.log("NIVORA SAVE: OK");
+                return true;
+
+            } catch (error) {
+                console.error("NIVORA SAVE ERROR:", error);
+                alert("ডেটা সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।");
+                return false;
+            }
+        }
+
+        // Keep inline HTML onclick handlers working reliably.
+        window.navigateTo = navigateTo;
+        window.goBack = goBack;
+        window.saveState = saveState;
+
+        window.nivoraNavigationHistory = ["home"];
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            updateCartBadge(); 
+            startLiveClock();
+        });
+    </script>
+</body>
+</html>
