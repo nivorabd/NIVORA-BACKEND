@@ -1,0 +1,217 @@
+CONTINUE BUILDING NIVORA ONE TOWARD THE MAIN PRODUCT VISION.
+
+IMPORTANT:
+Do not delete, replace or break any existing NIVORA ONE feature.
+Do not rewrite the working Gemini backend.
+Do not change Firebase security rules.
+Do not add payment or Adsterra yet.
+Do not require a Replit subscription just to make NIVORA's own features work.
+
+MAIN PRODUCT VISION:
+
+NIVORA ONE should become an AI-powered professional work and problem-solving platform.
+
+The AI should not be only a question-answer chatbot.
+
+Users should be able to bring a problem, file, code, business question, content requirement, or website/app problem to NIVORA AI and receive practical help and, where technically safe and possible, generated solutions.
+
+BUILD THIS AS THE NEXT CAPABILITY:
+
+NEW AI MODE:
+"Problem Solver"
+
+The existing AI mode selector should become:
+
+- General AI
+- Business AI
+- Content Creator
+- Coding Assistant
+- Problem Solver
+- App / Website Builder
+
+PROBLEM SOLVER SHOULD SUPPORT:
+
+1. Code problems
+User can provide:
+- HTML
+- CSS
+- JavaScript
+- Python
+- JSON
+- Node.js
+- Firebase code
+- API code
+- error messages
+
+The AI should:
+- understand the problem
+- identify likely causes
+- explain the problem simply
+- provide corrected code
+- identify which file should be changed
+- provide exact replacement instructions when possible
+- avoid inventing missing code
+
+2. Website problems
+
+Examples:
+"My login button doesn't work."
+"My page has a white overlay."
+"My mobile layout is broken."
+"My JavaScript button does nothing."
+
+The AI should analyze supplied code/files and produce a practical fix.
+
+3. App problems
+
+When project files are supplied, the AI should be able to:
+- inspect relevant files
+- identify related code
+- explain the problem
+- propose changes
+- generate corrected files/code
+- provide a clear test checklist
+
+IMPORTANT:
+Do not execute arbitrary user-generated code on the server.
+
+4. File-based problem solving
+
+Prepare the architecture for users to upload supported files such as:
+- HTML
+- CSS
+- JS
+- JSON
+- TXT
+- CSV
+- MD
+- PDF
+- images where appropriate
+
+Use Firebase Storage where appropriate.
+
+Do not expose private files to other users.
+
+5. Business problem solving
+
+The existing Business AI should eventually answer questions using verified user data.
+
+For this stage, do not claim browser data is authoritative.
+
+6. CONTENT PROBLEM SOLVING
+
+Allow users to ask things such as:
+
+"এই Facebook পোস্টটা ভালো করে দাও।"
+
+"এই বিজ্ঞাপনটা আরও professional করো।"
+
+"আমার product description তৈরি করো।"
+
+"এই YouTube script ঠিক করো।"
+
+7. APP / WEBSITE BUILDER
+
+Keep Builder mode.
+
+It should currently:
+- understand requirements
+- generate HTML/CSS/JS
+- generate project structure
+- modify supplied code conceptually
+- explain changes
+
+Do NOT execute arbitrary generated code.
+
+Do NOT claim that NIVORA is already a complete Replit replacement.
+
+IMPORTANT PRODUCT DESIGN:
+
+Make the AI experience simple for ordinary users.
+
+Instead of forcing users to understand technical terminology, provide choices such as:
+
+"আপনার কী সমস্যা?"
+
+[Business]
+[Website/App]
+[Code]
+[Content]
+[General]
+
+Then allow text and file input.
+
+If the user provides a file, show that the file is being analyzed.
+
+Show results in a useful structure:
+
+সমস্যা কী
+↓
+কেন হচ্ছে
+↓
+সমাধান
+↓
+সংশোধিত Code / Output
+↓
+কীভাবে পরীক্ষা করবেন
+
+SECURITY:
+
+- Gemini API key stays server-side.
+- Firebase authentication remains.
+- User files remain user-scoped.
+- Never trust browser-only Pro status.
+- Never expose another user's files.
+- Never execute arbitrary uploaded/generated code on the server.
+
+ARCHITECTURE:
+
+Reuse:
+- existing NIVORA AI UI
+- existing /api/ai-chat
+- existing ai-core.js
+- existing Firebase Authentication
+- existing Firebase Storage
+- existing mobile UI
+
+Do not create a separate unrelated application.
+
+IMPORTANT:
+Before editing, inspect the current project and determine the smallest safe set of changes.
+
+Because Replit daily credits may be limited, keep the implementation focused.
+
+FIRST implement ONLY:
+1. Problem Solver mode
+2. File-aware AI request architecture
+3. Clear problem-solving result format
+4. Safe file handling foundation
+5. Mobile UI integration
+
+Do NOT implement:
+- payments
+- Adsterra
+- direct Replit API
+- autonomous code execution
+- arbitrary server-side code execution
+
+TEST:
+- existing General AI
+- Business AI
+- Content Creator
+- Coding Assistant
+- new Problem Solver
+- Builder
+- Firebase login
+- existing navigation
+- Business
+- E-commerce
+
+If implementation would require a paid Replit feature, stop and explain exactly what requires payment instead of asking me to upgrade.
+
+At the end report:
+- files changed
+- features added
+- tests passed
+- remaining limitations
+- whether any paid external service is actually required

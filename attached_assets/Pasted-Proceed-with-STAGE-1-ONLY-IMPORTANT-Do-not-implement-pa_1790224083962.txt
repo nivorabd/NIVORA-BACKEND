@@ -1,0 +1,114 @@
+Proceed with STAGE 1 ONLY.
+
+IMPORTANT:
+Do not implement payments yet.
+Do not implement Adsterra yet.
+Do not implement direct Replit API integration yet.
+Do not change Firebase security rules.
+Do not rewrite the working Gemini backend.
+Do not remove or break any existing NIVORA ONE feature.
+
+Implement only the AI capability mode architecture.
+
+Add these modes inside the existing NIVORA AI:
+
+1. General AI
+2. Business AI
+3. Content Creator
+4. Coding Assistant
+5. App / Website Builder
+
+Requirements:
+
+- Keep the existing NIVORA AI chat UI.
+- Add a clean mobile-friendly mode selector.
+- Default mode must be General AI.
+- Existing General AI behavior must continue working exactly as before.
+- When a mode is selected, send:
+  mode: "general"
+  or
+  mode: "business"
+  or
+  mode: "content"
+  or
+  mode: "coding"
+  or
+  mode: "builder"
+
+to the existing /api/ai-chat endpoint.
+
+Update the backend so each mode has an appropriate system instruction.
+
+GENERAL:
+Normal professional Bengali/Banglish/English AI assistant.
+
+BUSINESS:
+Business questions, analysis and calculations.
+IMPORTANT: For this first stage, do not treat browser-supplied business data as trusted authorization.
+Clearly use only supplied context and never invent records.
+Server-side verified Firestore Business AI will be implemented in a later stage.
+
+CONTENT:
+Create professional:
+- Facebook posts
+- captions
+- YouTube titles
+- YouTube descriptions
+- advertisements
+- product descriptions
+- short video scripts
+- Bengali and English content
+
+CODING:
+Help with:
+- HTML
+- CSS
+- JavaScript
+- Python
+- Node.js
+- Firebase
+- APIs
+- debugging
+- code explanation
+
+BUILDER:
+For now, make this an AI planning/code-generation mode only.
+It can generate HTML/CSS/JS and explain how to build a website/app.
+Do NOT execute arbitrary generated code on the server.
+Do NOT claim full Replit functionality.
+
+SECURITY:
+- Keep GEMINI_API_KEY server-side.
+- Do not expose secrets.
+- Do not create client-side Pro authorization.
+- Do not modify Firebase rules.
+- Do not modify existing authentication.
+
+UI:
+Make the mode selector professional and mobile friendly.
+Do not redesign the entire application.
+Do not create unnecessary duplicate pages.
+
+TEST AFTER IMPLEMENTATION:
+
+1. General AI Bengali question
+2. Business question
+3. Content Creator request
+4. Coding request
+5. Builder request
+6. Existing Firebase login
+7. Existing navigation
+8. Existing Business module
+9. Existing E-commerce module
+
+If any existing feature breaks, fix the regression before finishing.
+
+At the end report:
+- files changed
+- what was added
+- tests performed
+- whether existing AI still works
+- whether Firebase still works
+- whether any issue remains
+
+Do not proceed to Stage 2 until this Stage 1 is complete and verified.

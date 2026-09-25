@@ -2,8 +2,8 @@
 <html lang="bn" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NIVORA ONE - All-in-One Professional System & Hub</title>
+    <meta name="viewport" ="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NIVORA ONE - All-in-Onecontent Professional System & Hub</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -927,6 +927,33 @@ if (typeof loadNivoraFromFirebase === "function") {
                     <p class="text-[11px] text-slate-400">সিস্টেম কন্ট্রোল ও ব্যাকআপ</p>
                 </div>
             </div>
+
+            <div class="glass-panel p-5 rounded-3xl border-cyan-500/20 bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/20">
+                <div class="flex items-start justify-between gap-3 mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-2xl bg-cyan-500/10 text-cyan-300 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-satellite-dish"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-bold text-white text-base">Business Radar</h3>
+                                <span class="px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 text-[10px] font-semibold border border-cyan-500/20">Early signals</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">আপনার সংরক্ষিত ব্যবসায়িক রেকর্ড থেকে ঝুঁকি ও পরবর্তী পদক্ষেপ শনাক্ত করে</p>
+                        </div>
+                    </div>
+                    <button onclick="renderBusinessRadar()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition" title="Radar refresh">
+                        <i class="fa-solid fa-rotate"></i>
+                    </button>
+                </div>
+                <div id="business-radar-summary" class="text-xs text-slate-400 mb-3"></div>
+                <div id="business-radar-signals" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                        <div id="business-radar-planning" class="mt-4"></div>
+                <p class="text-[11px] text-slate-500 mt-4 pt-3 border-t border-slate-800">
+                    <i class="fa-solid fa-circle-info mr-1 text-cyan-400"></i>
+                            Radar-এর সংকেত ও planning বাস্তব dated record-এর ওপর ভিত্তি করে। এগুলো run-rate estimate, নিশ্চিত ভবিষ্যদ্বাণী নয়; গুরুত্বপূর্ণ সিদ্ধান্তের আগে রেকর্ড যাচাই করুন।
+                </p>
+            </div>
         </section>
 
         <!-- PROFESSIONAL CALCULATOR & LIVE CLOCK -->
@@ -1015,6 +1042,29 @@ if (typeof loadNivoraFromFirebase === "function") {
                 <button onclick="clearAIChat()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">
                     <i class="fa-solid fa-trash mr-1"></i> ক্লিয়ার চ্যাট
                 </button>
+            </div>
+
+            <div class="glass-panel p-3.5 rounded-2xl flex flex-col sm:flex-row sm:items-center gap-3">
+                <div class="flex items-center gap-2 min-w-0">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs flex-shrink-0">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold text-slate-200">AI capability</p>
+                        <p id="ai-mode-description" class="text-[11px] text-slate-500 truncate">সাধারণ প্রশ্ন, তথ্য ও দৈনন্দিন সহায়তা</p>
+                    </div>
+                </div>
+                <label class="sm:ml-auto flex items-center gap-2">
+                    <span class="text-[11px] text-slate-500 whitespace-nowrap">Mode</span>
+                    <select id="ai-mode-select" onchange="handleAIModeChange(this)" class="w-full sm:w-auto min-w-[190px] bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-purple-500">
+                        <option value="general" selected>General AI</option>
+                        <option value="business">Business AI</option>
+                        <option value="content">Content Creator</option>
+                        <option value="coding">Coding Assistant</option>
+                        <option value="problem">Problem Solver</option>
+                        <option value="builder">App / Website Builder</option>
+                    </select>
+                </label>
             </div>
 
             <div class="glass-panel rounded-2xl flex flex-col h-[65vh] overflow-hidden">
@@ -1134,7 +1184,9 @@ if (typeof loadNivoraFromFirebase === "function") {
                         <select id="pur-product-select" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200"></select>
                         <input type="number" id="pur-qty" placeholder="পরিমাণ" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
                         <input type="number" id="pur-price" placeholder="মোট ক্রয়মূল্য (৳)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="date" id="pur-date" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
                     </div>
+                    <p class="text-[11px] text-slate-500">তারিখ ও মোট মূল্য সংরক্ষিত হবে, যাতে Radar product trend এবং reorder estimate তৈরি করতে পারে।</p>
                     <button onclick="addPurchaseEntry()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-medium py-2.5 rounded-xl text-sm transition">পারচেজ এন্ট্রি যোগ করুন</button>
                 </div>
             </div>
@@ -1148,7 +1200,9 @@ if (typeof loadNivoraFromFirebase === "function") {
                         <select id="sale-product-select" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200"></select>
                         <input type="number" id="sale-qty" placeholder="পরিমাণ" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
                         <input type="number" id="sale-price" placeholder="মোট বিক্রয়মূল্য (৳)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <input type="date" id="sale-date" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
                     </div>
+                    <p class="text-[11px] text-slate-500">তারিখ ও মোট বিক্রয়মূল্য সংরক্ষিত হবে, যাতে Radar demand trend এবং planning estimate তৈরি করতে পারে।</p>
                     <button onclick="addSalesEntry()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-medium py-2.5 rounded-xl text-sm transition">সেলস এন্ট্রি যোগ করুন</button>
                 </div>
             </div>
@@ -1343,6 +1397,8 @@ if (typeof loadNivoraFromFirebase === "function") {
             customers: JSON.parse(localStorage.getItem('nivora_customers')) || [],
             cart: JSON.parse(localStorage.getItem('nivora_cart')) || [],
             orders: JSON.parse(localStorage.getItem('nivora_orders')) || [],
+            purchases: JSON.parse(localStorage.getItem('nivora_purchases')) || [],
+            sales: JSON.parse(localStorage.getItem('nivora_sales')) || [],
             taskEarnBalance: parseFloat(localStorage.getItem('nivora_taskearn_bal')) || 120.50,
             taskEarnTasks: JSON.parse(localStorage.getItem('nivora_taskearn_tasks')) || [
                 { id: 't1', title: 'ভিডিও টাস্ক দেখুন (10s)', reward: 15, completed: false }
@@ -1429,6 +1485,16 @@ function saveLocalState() {
         );
 
         localStorage.setItem(
+            'nivora_purchases',
+            JSON.stringify(Array.isArray(appState.purchases) ? appState.purchases : [])
+        );
+
+        localStorage.setItem(
+            'nivora_sales',
+            JSON.stringify(Array.isArray(appState.sales) ? appState.sales : [])
+        );
+
+        localStorage.setItem(
             'nivora_taskearn_bal',
             appState.taskEarnBalance
         );
@@ -1510,6 +1576,14 @@ async function saveNivoraToFirebase() {
 
             orders: Array.isArray(appState.orders)
                 ? appState.orders
+                : [],
+
+            purchases: Array.isArray(appState.purchases)
+                ? appState.purchases
+                : [],
+
+            sales: Array.isArray(appState.sales)
+                ? appState.sales
                 : [],
 
             taskEarnBalance:
@@ -1738,6 +1812,16 @@ function saveLocalState() {
         );
 
         localStorage.setItem(
+            'nivora_purchases',
+            JSON.stringify(Array.isArray(appState.purchases) ? appState.purchases : [])
+        );
+
+        localStorage.setItem(
+            'nivora_sales',
+            JSON.stringify(Array.isArray(appState.sales) ? appState.sales : [])
+        );
+
+        localStorage.setItem(
             'nivora_taskearn_bal',
             appState.taskEarnBalance
         );
@@ -1844,6 +1928,16 @@ async function saveNivoraToFirebase() {
             orders:
                 Array.isArray(appState.orders)
                     ? appState.orders
+                    : [],
+
+            purchases:
+                Array.isArray(appState.purchases)
+                    ? appState.purchases
+                    : [],
+
+            sales:
+                Array.isArray(appState.sales)
+                    ? appState.sales
                     : [],
 
             taskEarnBalance:
@@ -2081,6 +2175,14 @@ async function loadNivoraFromFirebase() {
             appState.orders = cloudData.orders;
         }
 
+        if (Array.isArray(cloudData.purchases)) {
+            appState.purchases = cloudData.purchases;
+        }
+
+        if (Array.isArray(cloudData.sales)) {
+            appState.sales = cloudData.sales;
+        }
+
         if (
             cloudData.taskEarnBalance !== undefined &&
             cloudData.taskEarnBalance !== null
@@ -2124,6 +2226,17 @@ async function loadNivoraFromFirebase() {
         } catch (error) {
             console.warn(
                 "NIVORA cart badge refresh skipped:",
+                error
+            );
+        }
+
+        try {
+            if (typeof renderBusinessRadar === "function") {
+                renderBusinessRadar();
+            }
+        } catch (error) {
+            console.warn(
+                "NIVORA radar refresh skipped:",
                 error
             );
         }
@@ -2183,6 +2296,7 @@ console.log(
 
         function renderViewData(viewId) {
             if (viewId === 'business') { renderBusinessProducts(); renderFinanceReports(); populateProductSelects(); }
+            if (viewId === 'home') { renderBusinessRadar(); }
             if (viewId === 'calculator') { startLiveClock(); }
             if (viewId === 'bakikhata') { renderBakiCustomers(); }
             if (viewId === 'ecommerce') { renderShopProducts(); }
@@ -2582,25 +2696,63 @@ console.log(
             const supplier = document.getElementById('pur-supplier').value.trim();
             const prodId = document.getElementById('pur-product-select').value;
             const qty = parseInt(document.getElementById('pur-qty').value) || 0;
-            if (!supplier || qty <= 0) { alert('সঠিক তথ্য দিন'); return; }
+            const totalPrice = Number(document.getElementById('pur-price').value) || 0;
+            const date = document.getElementById('pur-date').value || new Date().toISOString().split('T')[0];
+            if (!supplier || !prodId || qty <= 0 || totalPrice < 0) { alert('সঠিক supplier, product, পরিমাণ ও মোট মূল্য দিন'); return; }
             const prod = appState.products.find(p => p.id === prodId);
-            if (prod) prod.qty += qty;
+            if (!prod) { alert('প্রোডাক্ট পাওয়া যায়নি'); return; }
+            prod.qty += qty;
+            if (!Array.isArray(appState.purchases)) appState.purchases = [];
+            appState.purchases.push({
+                id: 'pur-' + Date.now(),
+                supplier,
+                productId: prod.id,
+                productName: prod.name,
+                qty,
+                totalPrice,
+                unitPrice: qty ? totalPrice / qty : 0,
+                date,
+                createdAt: new Date().toISOString()
+            });
             saveState();
-            alert('পারচেজ সফল হয়েছে!');
+            document.getElementById('pur-supplier').value = '';
+            document.getElementById('pur-qty').value = '';
+            document.getElementById('pur-price').value = '';
+            document.getElementById('pur-date').value = '';
+            populateProductSelects();
+            alert('পারচেজ সফল হয়েছে এবং history সংরক্ষিত হয়েছে!');
         }
 
         function addSalesEntry() {
             const customer = document.getElementById('sale-customer').value.trim();
             const prodId = document.getElementById('sale-product-select').value;
             const qty = parseInt(document.getElementById('sale-qty').value) || 0;
-            if (!customer || qty <= 0) { alert('সঠিক তথ্য দিন'); return; }
+            const totalPrice = Number(document.getElementById('sale-price').value) || 0;
+            const date = document.getElementById('sale-date').value || new Date().toISOString().split('T')[0];
+            if (!customer || !prodId || qty <= 0 || totalPrice < 0) { alert('সঠিক customer, product, পরিমাণ ও মোট মূল্য দিন'); return; }
             const prod = appState.products.find(p => p.id === prodId);
-            if (prod) {
-                if (prod.qty < qty) { alert('স্টকে পর্যাপ্ত পরিমাণ নেই!'); return; }
-                prod.qty -= qty;
-            }
+            if (!prod) { alert('প্রোডাক্ট পাওয়া যায়নি'); return; }
+            if (prod.qty < qty) { alert('স্টকে পর্যাপ্ত পরিমাণ নেই!'); return; }
+            prod.qty -= qty;
+            if (!Array.isArray(appState.sales)) appState.sales = [];
+            appState.sales.push({
+                id: 'sale-' + Date.now(),
+                customer,
+                productId: prod.id,
+                productName: prod.name,
+                qty,
+                totalPrice,
+                unitPrice: qty ? totalPrice / qty : 0,
+                date,
+                createdAt: new Date().toISOString()
+            });
             saveState();
-            alert('সেলস সফল হয়েছে!');
+            document.getElementById('sale-customer').value = '';
+            document.getElementById('sale-qty').value = '';
+            document.getElementById('sale-price').value = '';
+            document.getElementById('sale-date').value = '';
+            populateProductSelects();
+            alert('সেলস সফল হয়েছে এবং history সংরক্ষিত হয়েছে!');
         }
 
         // --- Baki Khata & Cart Helpers ---
@@ -2693,6 +2845,331 @@ console.log(
             document.getElementById('admin-stat-tasks').innerText = appState.taskEarnTasks.length;
         }
 
+        function renderBusinessRadar() {
+            const summary = document.getElementById('business-radar-summary');
+            const signalsContainer = document.getElementById('business-radar-signals');
+            const planningContainer = document.getElementById('business-radar-planning');
+            if (!summary || !signalsContainer) return;
+
+            const products = Array.isArray(appState.products) ? appState.products : [];
+            const financeRecords = Array.isArray(appState.financeRecords) ? appState.financeRecords : [];
+            const customers = Array.isArray(appState.customers) ? appState.customers : [];
+            const orders = Array.isArray(appState.orders) ? appState.orders : [];
+            const tasks = Array.isArray(appState.taskEarnTasks) ? appState.taskEarnTasks : [];
+            const purchases = Array.isArray(appState.purchases) ? appState.purchases : [];
+            const sales = Array.isArray(appState.sales) ? appState.sales : [];
+            const dayMs = 24 * 60 * 60 * 1000;
+            const nowMs = Date.now();
+            const currentStart = nowMs - (30 * dayMs);
+            const previousStart = nowMs - (60 * dayMs);
+
+            const escapeRadarText = (value) => String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+
+            const numericValue = (value) => {
+                const number = Number(value);
+                return Number.isFinite(number) ? number : 0;
+            };
+
+            const formatRadarMoney = (value) =>
+                `৳${Math.round(numericValue(value)).toLocaleString('en-IN')}`;
+
+            const formatRadarNumber = (value) =>
+                Math.round(numericValue(value)).toLocaleString('en-IN');
+
+            const parseRadarDate = (value) => {
+                if (!value) return null;
+                const raw = String(value);
+                const date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(raw) ? `${raw}T23:59:59` : raw);
+                return Number.isNaN(date.getTime()) ? null : date;
+            };
+
+            const normalizeTransaction = (record) => ({
+                ...record,
+                productId: String(record.productId ?? ''),
+                qty: Math.max(0, numericValue(record.qty)),
+                totalPrice: Math.max(0, numericValue(record.totalPrice ?? record.total ?? record.amount)),
+                dateValue: parseRadarDate(record.date || record.createdAt)
+            });
+
+            const datedFinanceRecords = financeRecords
+                .map(record => ({
+                    ...record,
+                    amount: numericValue(record.amount),
+                    dateValue: parseRadarDate(record.date)
+                }))
+                .filter(record => record.dateValue);
+
+            const datedSales = sales.map(normalizeTransaction).filter(record => record.dateValue);
+            const datedPurchases = purchases.map(normalizeTransaction).filter(record => record.dateValue);
+            const inWindow = (record, startMs, endMs) => {
+                const time = record.dateValue ? record.dateValue.getTime() : NaN;
+                return Number.isFinite(time) && time >= startMs && time <= endMs;
+            };
+
+            const sumFinance = (type, startMs, endMs) => datedFinanceRecords
+                .filter(record => record.type === type && inWindow(record, startMs, endMs))
+                .reduce((total, record) => total + record.amount, 0);
+
+            const sumTransactions = (records, productId, startMs, endMs) => records
+                .filter(record => record.productId === String(productId) && inWindow(record, startMs, endMs))
+                .reduce((total, record) => total + record.qty, 0);
+
+            const currentIncome = sumFinance('income', currentStart, nowMs);
+            const currentExpenses = sumFinance('expense', currentStart, nowMs);
+            const previousIncome = sumFinance('income', previousStart, currentStart);
+            const previousExpenses = sumFinance('expense', previousStart, currentStart);
+
+            const productStats = products.map(product => {
+                const currentUnits = sumTransactions(datedSales, product.id, currentStart, nowMs);
+                const previousUnits = sumTransactions(datedSales, product.id, previousStart, currentStart);
+                const currentPurchases = sumTransactions(datedPurchases, product.id, currentStart, nowMs);
+                const currentRevenue = datedSales
+                    .filter(record => record.productId === String(product.id) && inWindow(record, currentStart, nowMs))
+                    .reduce((total, record) => total + record.totalPrice, 0);
+                const averageDaily = currentUnits / 30;
+                const forecast30 = Math.ceil(averageDaily * 30);
+                const safetyStock = forecast30 > 0 ? Math.max(1, Math.ceil(forecast30 * 0.25)) : 0;
+                const reorderQty = Math.max(0, forecast30 + safetyStock - Math.max(0, numericValue(product.qty)));
+                const coverageDays = averageDaily > 0 ? numericValue(product.qty) / averageDaily : null;
+                let trend = 'পর্যাপ্ত history নেই';
+                if (previousUnits > 0 && currentUnits > previousUnits * 1.2) trend = 'বিক্রি বাড়ছে';
+                else if (previousUnits > 0 && currentUnits < previousUnits * 0.8) trend = 'বিক্রি কমছে';
+                else if (currentUnits > 0 || previousUnits > 0) trend = 'স্থিতিশীল';
+                return {
+                    ...product,
+                    currentUnits,
+                    previousUnits,
+                    currentPurchases,
+                    currentRevenue,
+                    averageDaily,
+                    forecast30,
+                    safetyStock,
+                    reorderQty,
+                    coverageDays,
+                    trend
+                };
+            });
+
+            const lowStockProducts = products.filter(product => {
+                const quantity = numericValue(product.qty);
+                return quantity >= 0 && quantity <= 5;
+            });
+            const negativeStockProducts = products.filter(product => numericValue(product.qty) < 0);
+            const outstandingBaki = customers.reduce((total, customer) => {
+                const explicitRemaining = Number(customer.remaining ?? customer.outstanding);
+                const due = numericValue(customer.due ?? customer.amount ?? customer.balance);
+                const paid = numericValue(customer.paid ?? customer.payment);
+                const remaining = Number.isFinite(explicitRemaining) ? explicitRemaining : due - paid;
+                return total + Math.max(0, remaining);
+            }, 0);
+            const pendingOrders = orders.filter(order => {
+                const status = String(order.status || 'pending').toLowerCase();
+                return !['completed', 'delivered', 'cancelled', 'canceled'].includes(status);
+            });
+            const incompleteTasks = tasks.filter(task => !task.completed);
+            const fastMovers = productStats.filter(product => product.currentUnits > 0)
+                .sort((a, b) => b.currentUnits - a.currentUnits);
+            const slowMovers = productStats.filter(product => product.previousUnits > 0 && product.currentUnits < product.previousUnits * 0.8)
+                .sort((a, b) => a.currentUnits - b.currentUnits);
+            const reorderPlans = productStats.filter(product => product.reorderQty > 0)
+                .sort((a, b) => b.reorderQty - a.reorderQty);
+            const activeSalesUnits = datedSales
+                .filter(record => inWindow(record, currentStart, nowMs))
+                .reduce((total, record) => total + record.qty, 0);
+            const averageDailyUnits = activeSalesUnits / 30;
+            const historyDays = datedSales.length
+                ? Math.max(1, Math.ceil((nowMs - Math.min(...datedSales.map(record => record.dateValue.getTime()))) / dayMs))
+                : 0;
+            const signals = [];
+
+            const addSignal = (severity, icon, title, evidence, nextStep) => {
+                signals.push({ severity, icon, title, evidence, nextStep });
+            };
+
+            if (negativeStockProducts.length) {
+                addSignal('critical', 'fa-triangle-exclamation', 'স্টক ডেটা যাচাই দরকার',
+                    `${negativeStockProducts.length}টি প্রোডাক্টে negative stock দেখা গেছে।`,
+                    'Business module-এ স্টক ও সাম্প্রতিক sale/purchase entry মিলিয়ে দেখুন।');
+            }
+
+            if (lowStockProducts.length) {
+                const names = lowStockProducts.slice(0, 3)
+                    .map(product => escapeRadarText(product.name || 'নামহীন প্রোডাক্ট')).join(', ');
+                addSignal('warning', 'fa-boxes-stacked', 'Low stock signal',
+                    `${lowStockProducts.length}টি প্রোডাক্টে ৫ বা তার কম ইউনিট আছে${names ? `: ${names}` : ''}।`,
+                    'এই প্রোডাক্টগুলোর বিক্রির গতি দেখে purchase plan তৈরি করুন।');
+            }
+
+            if (outstandingBaki > 0) {
+                addSignal('warning', 'fa-hand-holding-dollar', 'Outstanding Baki',
+                    `বর্তমান customer records অনুযায়ী বাকি ${formatRadarMoney(outstandingBaki)}।`,
+                    'Baki Khata-তে customer follow-up ও payment schedule যাচাই করুন।');
+            }
+
+            if (currentExpenses > currentIncome && currentExpenses > 0) {
+                addSignal('critical', 'fa-arrow-trend-down', 'Expense pressure',
+                    `গত ৩০ দিনে আয় ${formatRadarMoney(currentIncome)} এবং ব্যয় ${formatRadarMoney(currentExpenses)}।`,
+                    'অপ্রয়োজনীয় ব্যয় চিহ্নিত করে cash-flow review করুন।');
+            }
+
+            if (previousExpenses > 0 && currentExpenses > previousExpenses * 1.2) {
+                addSignal('warning', 'fa-chart-line', 'ব্যয় বাড়ার সংকেত',
+                    `বর্তমান ৩০ দিনের ব্যয় আগের ৩০ দিনের তুলনায় বেশি (${formatRadarMoney(previousExpenses)} → ${formatRadarMoney(currentExpenses)})।`,
+                    'বাড়তি ব্যয়ের category ও কারণ আলাদা করে পর্যালোচনা করুন।');
+            }
+
+            if (previousIncome > 0 && currentIncome < previousIncome * 0.8) {
+                addSignal('warning', 'fa-arrow-trend-down', 'আয় কমার সংকেত',
+                    `বর্তমান ৩০ দিনের আয় আগের ৩০ দিনের তুলনায় কম (${formatRadarMoney(previousIncome)} → ${formatRadarMoney(currentIncome)})।`,
+                    'সাম্প্রতিক sales, product demand এবং customer activity যাচাই করুন।');
+            }
+
+            if (datedSales.length === 0 && products.length) {
+                addSignal('info', 'fa-clock-rotate-left', 'Sales history শুরু করুন',
+                    'কোনো dated sales record নেই, তাই product demand ও reorder estimate তৈরি করা যাচ্ছে না।',
+                    'Business module-এর Sales tab-এ প্রতিটি বিক্রির তারিখ, পরিমাণ ও মোট মূল্য সংরক্ষণ করুন।');
+            }
+
+            if (fastMovers.length) {
+                const names = fastMovers.slice(0, 3).map(product =>
+                    `${escapeRadarText(product.name || 'নামহীন')} (${formatRadarNumber(product.currentUnits)} ইউনিট)`
+                ).join(', ');
+                addSignal('info', 'fa-ranking-star', 'Fast-moving products',
+                    `গত ৩০ দিনের sales history অনুযায়ী: ${names}।`,
+                    'এই productগুলোর stock coverage ও reorder plan নিয়মিত যাচাই করুন।');
+            }
+
+            if (slowMovers.length) {
+                const names = slowMovers.slice(0, 3).map(product =>
+                    escapeRadarText(product.name || 'নামহীন')
+                ).join(', ');
+                addSignal('warning', 'fa-arrow-trend-down', 'Slow-moving বা falling demand',
+                    `আগের ৩০ দিনের তুলনায় বর্তমানে কম বিক্রি হওয়া product: ${names}।`,
+                    'দাম, offer, product placement এবং stock purchase সিদ্ধান্ত review করুন।');
+            }
+
+            if (reorderPlans.length) {
+                const names = reorderPlans.slice(0, 3).map(product =>
+                    `${escapeRadarText(product.name || 'নামহীন')} (${formatRadarNumber(product.reorderQty)} ইউনিট)`
+                ).join(', ');
+                addSignal('warning', 'fa-cart-plus', 'Data-based reorder plan',
+                    `বর্তমান run-rate ও stock ধরে সম্ভাব্য reorder প্রয়োজন: ${names}।`,
+                    'Supplier price, cash flow ও actual demand যাচাই করে purchase করুন; Radar নিজে order দেয় না।');
+            }
+
+            if (pendingOrders.length) {
+                addSignal('info', 'fa-truck-fast', 'Pending orders',
+                    `${pendingOrders.length}টি order এখনো completed বা delivered নয়।`,
+                    'Order status আপডেট করে delivery বা customer follow-up সম্পন্ন করুন।');
+            }
+
+            if (incompleteTasks.length) {
+                addSignal('info', 'fa-list-check', 'Open tasks',
+                    `${incompleteTasks.length}টি task এখনো সম্পন্ন হয়নি।`,
+                    'Priority ও due date দেখে সবচেয়ে গুরুত্বপূর্ণ task আগে শেষ করুন।');
+            }
+
+            const totalSourceRecords = products.length + financeRecords.length + customers.length +
+                orders.length + purchases.length + sales.length;
+            summary.innerHTML = totalSourceRecords
+                ? `<span class="text-cyan-300 font-semibold">${signals.length ? `${signals.length}টি early signal` : 'তাৎক্ষণিক risk signal নেই'}</span> · ${products.length} products · ${sales.length} sales history · ${purchases.length} purchase history · ${historyDays ? `${historyDays} দিনের sales history` : 'sales history নেই'}`
+                : 'Radar চালানোর জন্য এখনো কোনো business record পাওয়া যায়নি।';
+
+            const severityStyles = {
+                critical: { wrapper: 'border-rose-500/30 bg-rose-500/5', icon: 'bg-rose-500/10 text-rose-300', label: 'জরুরি' },
+                warning: { wrapper: 'border-amber-500/30 bg-amber-500/5', icon: 'bg-amber-500/10 text-amber-300', label: 'সতর্কতা' },
+                info: { wrapper: 'border-blue-500/30 bg-blue-500/5', icon: 'bg-blue-500/10 text-blue-300', label: 'পর্যবেক্ষণ' }
+            };
+
+            signalsContainer.innerHTML = signals.length
+                ? signals.map(signal => {
+                    const style = severityStyles[signal.severity];
+                    return `
+                        <article class="rounded-2xl border p-3.5 ${style.wrapper}">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-xl ${style.icon} flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid ${signal.icon}"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <h4 class="font-bold text-sm text-slate-100">${escapeRadarText(signal.title)}</h4>
+                                        <span class="text-[10px] font-semibold text-slate-400 whitespace-nowrap">${style.label}</span>
+                                    </div>
+                                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">${signal.evidence}</p>
+                                    <p class="text-[11px] text-slate-400 mt-2"><span class="text-cyan-300 font-semibold">পরবর্তী পদক্ষেপ:</span> ${escapeRadarText(signal.nextStep)}</p>
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                }).join('')
+                : `
+                    <div class="md:col-span-2 rounded-2xl border border-emerald-500/25 bg-emerald-500/5 p-4 flex items-start gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-300 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-shield-heart"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-emerald-200">${totalSourceRecords ? 'বর্তমান রেকর্ডে তাৎক্ষণিক সতর্কতা পাওয়া যায়নি' : 'Business Radar প্রস্তুত'}</h4>
+                            <p class="text-xs text-slate-400 mt-1">${totalSourceRecords ? 'নতুন sales, expense, stock বা Baki record যুক্ত হলে Radar আবার যাচাই করুন।' : 'Products, finance, customer বা order record যুক্ত হলে Radar evidence-based signal দেখাবে।'}</p>
+                        </div>
+                    </div>
+                `;
+
+            if (planningContainer) {
+                const horizonCard = (days, label) => {
+                    const estimate = averageDailyUnits > 0 ? Math.ceil(averageDailyUnits * days) : null;
+                    return `
+                        <div class="rounded-xl border border-cyan-500/20 bg-slate-950/50 p-3">
+                            <div class="text-[10px] uppercase tracking-wide text-slate-500">${label}</div>
+                            <div class="text-lg font-black text-cyan-300 mt-1">${estimate === null ? '—' : formatRadarNumber(estimate)}</div>
+                            <div class="text-[11px] text-slate-400">${estimate === null ? 'sales history দরকার' : 'সম্ভাব্য unit run-rate'}</div>
+                        </div>
+                    `;
+                };
+                const topProducts = fastMovers.slice(0, 5);
+                const planRows = reorderPlans.slice(0, 5).map(product => `
+                    <div class="flex items-center justify-between gap-3 py-2 border-b border-slate-800 last:border-0">
+                        <div class="min-w-0">
+                            <div class="text-xs font-semibold text-slate-200 truncate">${escapeRadarText(product.name || 'নামহীন প্রোডাক্ট')}</div>
+                            <div class="text-[11px] text-slate-500">${product.coverageDays === null ? 'coverage নেই' : `${Math.round(product.coverageDays)} দিনের stock coverage`}</div>
+                        </div>
+                        <span class="text-xs font-bold text-amber-300 whitespace-nowrap">+${formatRadarNumber(product.reorderQty)} ইউনিট</span>
+                    </div>
+                `).join('');
+                planningContainer.innerHTML = `
+                    <div class="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-3.5">
+                        <div class="flex items-center justify-between gap-3 mb-3">
+                            <div>
+                                <h4 class="text-sm font-bold text-cyan-100"><i class="fa-solid fa-compass-drafting mr-1.5"></i>Future planning</h4>
+                                <p class="text-[11px] text-slate-400 mt-1">${datedSales.length ? 'সাম্প্রতিক sales run-rate থেকে হিসাব' : 'Sales entry যোগ করলে planning চালু হবে'}</p>
+                            </div>
+                            <span class="text-[10px] text-slate-500">${datedSales.length} dated sales records</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            ${horizonCard(30, '৩০ দিন')}
+                            ${horizonCard(90, '৯০ দিন')}
+                            ${horizonCard(365, '৩৬৫ দিন')}
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="rounded-xl bg-slate-950/40 p-3">
+                                <div class="text-xs font-bold text-slate-200 mb-1">Demand leaders</div>
+                                <div class="text-[11px] text-slate-400">${topProducts.length ? topProducts.map(product => `${escapeRadarText(product.name || 'নামহীন')} · ${formatRadarNumber(product.currentUnits)} unit`).join('<br>') : 'কমপক্ষে একটি dated sales record দরকার'}</div>
+                            </div>
+                            <div class="rounded-xl bg-slate-950/40 p-3">
+                                <div class="text-xs font-bold text-slate-200 mb-1">Purchase planning</div>
+                                <div class="text-[11px] text-slate-400">${planRows || 'বর্তমান run-rate অনুযায়ী অতিরিক্ত reorder প্রয়োজন দেখা যায়নি।'}</div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-3">Seasonality বা market data নেই; ৩৬৫ দিনের সংখ্যা কেবল বর্তমান average daily sales ধরে run-rate estimate।</p>
+                    </div>
+                `;
+            }
+        }
+
         function exportAppData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
             const dlAnchorElem = document.createElement('a');
@@ -2713,6 +3190,53 @@ console.log(
 
 let nivoraAIIsBusy = false;
 let nivoraAIRecognition = null;
+let nivoraAIMode = 'general';
+
+const NIVORA_AI_MODES = {
+    general: {
+        label: 'General AI',
+        description: 'সাধারণ প্রশ্ন, তথ্য ও দৈনন্দিন সহায়তা'
+    },
+    business: {
+        label: 'Business AI',
+        description: 'ব্যবসা, হিসাব, বিশ্লেষণ ও গণনা'
+    },
+    content: {
+        label: 'Content Creator',
+        description: 'পোস্ট, ক্যাপশন, বিজ্ঞাপন ও ভিডিও কনটেন্ট'
+    },
+    coding: {
+        label: 'Coding Assistant',
+        description: 'কোড, API, Firebase ও debugging সহায়তা'
+    },
+    problem: {
+        label: 'Problem Solver',
+        description: 'সমস্যা, error ও root cause বিশ্লেষণ'
+    },
+    builder: {
+        label: 'App / Website Builder',
+        description: 'HTML, CSS, JS পরিকল্পনা ও code generation'
+    }
+};
+
+function getNivoraAIMode() {
+    const selectedMode = document.getElementById('ai-mode-select')?.value;
+    return NIVORA_AI_MODES[selectedMode] ? selectedMode : nivoraAIMode;
+}
+
+function handleAIModeChange(select) {
+    const nextMode = NIVORA_AI_MODES[select?.value] ? select.value : 'general';
+    nivoraAIMode = nextMode;
+
+    if (select && select.value !== nextMode) {
+        select.value = nextMode;
+    }
+
+    const description = document.getElementById('ai-mode-description');
+    if (description) {
+        description.textContent = NIVORA_AI_MODES[nextMode].description;
+    }
+}
 
 
 // -----------------------------------------------------
@@ -3085,21 +3609,24 @@ async function sendAIMessage() {
 
         const context = buildNivoraAIContext();
         const history = getNivoraAIHistory();
+        const mode = getNivoraAIMode();
 
         const requestBody = {
             prompt: prompt,
             context: context,
             history: history,
+            mode: mode,
 
             app: {
                 name: 'NIVORA AI',
                 language: 'bn-BD',
-                mode: 'professional-assistant'
+                mode: mode
             }
         };
 
-const response = await fetch('/api/ai-chat', {
-        
+
+        const response = await fetch('/api/ai-chat', {
+
             method: 'POST',
 
             headers: {
@@ -3140,6 +3667,7 @@ const response = await fetch('/api/ai-chat', {
          */
 
         const reply =
+            data.answer ||
             data.reply ||
             data.response ||
             data.message ||
@@ -3608,6 +4136,14 @@ function initializeNivoraAI() {
                     safe(appState.orders, [])
                 );
                 localStorage.setItem(
+                    "nivora_purchases",
+                    safe(appState.purchases, [])
+                );
+                localStorage.setItem(
+                    "nivora_sales",
+                    safe(appState.sales, [])
+                );
+                localStorage.setItem(
                     "nivora_taskearn_bal",
                     String(Number(appState.taskEarnBalance) || 0)
                 );
@@ -3630,6 +4166,14 @@ function initializeNivoraAI() {
                     }
                 } catch (error) {
                     console.warn("Cart badge update skipped:", error);
+                }
+
+                try {
+                    if (typeof renderBusinessRadar === "function") {
+                        renderBusinessRadar();
+                    }
+                } catch (error) {
+                    console.warn("Business radar refresh skipped:", error);
                 }
 
                 // Firebase is optional. Local Save must never depend on it.
@@ -3671,6 +4215,7 @@ function initializeNivoraAI() {
         document.addEventListener('DOMContentLoaded', () => { 
             updateCartBadge(); 
             startLiveClock();
+            renderBusinessRadar();
         });
     </script>
 </body>

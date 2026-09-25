@@ -1,0 +1,1598 @@
+PROJECT NAME:
+NIVORA ONE — All-in-One Professional AI & Business System
+
+ROLE:
+You are the senior full-stack architect, AI engineer, security engineer, UI/UX engineer, QA engineer, database engineer and release engineer responsible for completing the existing NIVORA ONE project.
+
+IMPORTANT:
+This is NOT a request to create a random new demo app.
+
+You must inspect the EXISTING repository first and preserve existing working functionality.
+
+DO NOT unnecessarily rebuild the project from scratch.
+DO NOT delete working modules.
+DO NOT replace working Firebase configuration.
+DO NOT remove existing authentication, business data, e-commerce, tasks, homeo records, admin, AI or dashboard functionality.
+DO NOT create fake data just to make the UI look complete.
+
+The final application must be a real, maintainable, secure, production-oriented application.
+
+==================================================
+1. EXISTING PROJECT — PRESERVE FIRST
+==================================================
+
+Repository:
+NIVORA-BACKEND
+
+Existing major technologies/concepts:
+- HTML/CSS/JavaScript frontend
+- Firebase Authentication
+- Firebase Firestore
+- Firebase Storage
+- Gemini AI backend
+- server-side Gemini API key
+- /api/ai-chat
+- server.js
+- api/ai-chat.js
+- netlify/functions/ai-chat.js where applicable
+- package.json
+- GitHub source control
+
+Existing application name:
+NIVORA ONE
+
+The existing project may contain:
+- Dashboard
+- AI Assistant
+- Business management
+- Products
+- Purchases
+- Sales
+- Stock
+- Income
+- Expenses
+- Baki Khata
+- E-commerce
+- Tasks
+- Digital German Homeo Hall
+- Reports
+- Files
+- Admin
+- Settings
+- Login
+- Create Account
+- Firebase integration
+- AI chat
+- AI modes
+
+FIRST TASK:
+Inspect the entire repository and understand:
+- project structure
+- existing frontend
+- backend
+- Firebase integration
+- authentication
+- Firestore
+- Storage
+- AI API
+- navigation
+- state management
+- business modules
+- admin system
+- current errors
+- duplicate code
+- security weaknesses
+
+Before changing anything, create a safe checkpoint/backup if the environment supports it.
+
+Then continue development from the existing state.
+
+==================================================
+2. CORE PRINCIPLE
+==================================================
+
+The final system must follow:
+
+PRESERVE
+→ INSPECT
+→ UNDERSTAND
+→ PLAN
+→ BUILD
+→ INTEGRATE
+→ TEST
+→ SECURE
+→ VERIFY
+→ REGRESSION TEST
+→ BACKUP
+→ RELEASE
+
+Never sacrifice existing working functionality just to add a new feature.
+
+If an existing implementation already works, improve it instead of replacing it unnecessarily.
+
+==================================================
+3. NIVORA ONE PRODUCT VISION
+==================================================
+
+NIVORA ONE is an all-in-one professional AI and business platform.
+
+It should combine:
+
+1. Professional AI Assistant
+2. Business Management
+3. Product & Inventory Management
+4. Purchases
+5. Sales
+6. Income & Expense
+7. Baki Khata / Accounts Receivable
+8. E-commerce
+9. Tasks
+10. Digital German Homeo Hall records
+11. Reports
+12. Files
+13. Admin Panel
+14. Authentication
+15. AI-powered problem solving
+16. Coding Assistant
+17. Content Creator
+18. App/Website Builder planning
+19. Business Intelligence
+20. Future predictive business intelligence
+
+The system must be mobile-first and professional.
+
+==================================================
+4. LANGUAGES
+==================================================
+
+NIVORA ONE must understand:
+
+- Bengali
+- Banglish
+- English
+
+Examples:
+
+Bengali:
+"বাংলাদেশের রাজধানী কী?"
+
+Banglish:
+"amar business er ajker bikri koto?"
+
+English:
+"Analyze my monthly expenses."
+
+The AI must answer naturally in the user's language.
+
+If the user asks in Bengali:
+Answer in natural Bengali.
+
+If English:
+Answer in English.
+
+If Banglish:
+Understand it and respond naturally, preferably in Bangla unless context suggests English.
+
+Do not respond with unnecessary language switching.
+
+==================================================
+5. AI MODES
+==================================================
+
+Implement/maintain these AI modes:
+
+1. General AI
+2. Business AI
+3. Content Creator
+4. Coding Assistant
+5. Problem Solver
+6. App/Website Builder
+
+The mode must affect the system instruction and behavior.
+
+----------------------------------
+GENERAL AI
+----------------------------------
+
+Handle:
+- general questions
+- mathematics
+- explanations
+- education
+- writing
+- everyday problem solving
+- Bengali/English/Banglish
+- normal professional assistance
+
+Do not invent facts.
+
+----------------------------------
+BUSINESS AI
+----------------------------------
+
+Business AI must use actual stored business data.
+
+It may analyze:
+- products
+- stock
+- purchases
+- sales
+- income
+- expenses
+- profit/loss
+- customers
+- baki
+- orders
+- tasks
+- business trends
+
+CRITICAL:
+
+Never invent:
+- sales
+- purchases
+- products
+- stock
+- customers
+- profit
+- expenses
+- orders
+- baki
+- business statistics
+
+If data is missing:
+explicitly say what data is missing.
+
+Business calculations must be based on actual stored records.
+
+----------------------------------
+CONTENT CREATOR
+----------------------------------
+
+Support:
+- Facebook posts
+- advertisements
+- product descriptions
+- captions
+- scripts
+- articles
+- Bengali content
+- English content
+- Banglish content
+- marketing content
+
+----------------------------------
+CODING ASSISTANT
+----------------------------------
+
+Support:
+- HTML
+- CSS
+- JavaScript
+- Node.js
+- Firebase
+- APIs
+- JSON
+- SQL
+- programming errors
+- debugging
+- refactoring
+- architecture
+
+When fixing code provide:
+1. problem
+2. cause
+3. exact solution
+4. exact file
+5. exact location
+6. replacement code when necessary
+7. testing steps
+
+Never claim code was executed unless it was actually executed.
+
+----------------------------------
+PROBLEM SOLVER
+----------------------------------
+
+Accept:
+- text
+- errors
+- screenshots
+- code
+- files
+- multiple files
+- project structure
+
+Core workflow:
+
+UNDERSTAND
+→ INSPECT
+→ ANALYZE
+→ FIND ROOT CAUSE
+→ PLAN
+→ SOLVE
+→ EXPLAIN
+→ TEST
+→ REPORT
+
+For technical problems clearly distinguish:
+- observed evidence
+- likely cause
+- confirmed cause
+- proposed fix
+- test result
+
+----------------------------------
+APP/WEBSITE BUILDER
+----------------------------------
+
+Help users create:
+- websites
+- web apps
+- business systems
+- dashboards
+- landing pages
+- internal tools
+
+The AI can generate code and project structure.
+
+DO NOT execute arbitrary untrusted code.
+
+DO NOT claim to deploy something unless deployment actually occurred.
+
+==================================================
+6. AI BACKEND
+==================================================
+
+Gemini API key MUST remain server-side.
+
+NEVER put:
+GEMINI_API_KEY
+
+inside:
+- index.html
+- frontend JavaScript
+- localStorage
+- public GitHub files
+- Firebase frontend configuration
+- client-side source
+
+Use environment variables.
+
+Backend endpoint should support:
+
+POST /api/ai-chat
+
+Expected success:
+
+{
+  "ok": true,
+  "answer": "..."
+}
+
+Expected failure:
+
+{
+  "ok": false,
+  "error": "..."
+}
+
+Support:
+- prompt
+- history
+- context
+- app information
+- AI mode
+
+Keep request validation.
+
+Limit oversized requests.
+
+Handle Gemini errors safely.
+
+Never expose secret keys in error messages.
+
+==================================================
+7. FIREBASE
+==================================================
+
+Preserve existing Firebase project.
+
+Firebase services:
+- Authentication
+- Firestore
+- Storage
+
+Authentication:
+- Create account
+- Login
+- Logout
+- Session persistence
+- Current user
+- User-specific data
+
+Every user's private business data must be isolated.
+
+Conceptual structure:
+
+users/{uid}
+
+and user-owned NIVORA data beneath that user's scope.
+
+Potential collections:
+
+products
+purchases
+sales
+expenses
+baki
+customers
+tasks
+orders
+patients
+medicalRecords
+files
+settings
+aiHistory
+
+Use the existing implementation where possible.
+
+Do not break existing Firebase configuration.
+
+==================================================
+8. FIRESTORE SECURITY
+==================================================
+
+Users must only access their own data.
+
+A normal user must NOT be able to:
+- read another user's data
+- modify another user's data
+- access admin data
+- become admin by changing frontend JavaScript
+
+Admin authorization must be enforced server-side/rules-side.
+
+Never trust frontend-only role checks.
+
+Test:
+- User A → User B data
+- unauthenticated access
+- modified frontend
+- privilege escalation
+- admin endpoint access
+
+==================================================
+9. STORAGE
+==================================================
+
+User files must be stored under user-owned paths.
+
+Validate:
+- file size
+- file type
+- ownership
+- access permissions
+
+Do not allow arbitrary unrestricted file access.
+
+Support where practical:
+- images
+- PDF
+- TXT
+- CSV
+- JSON
+- Markdown
+- code files
+
+==================================================
+10. DASHBOARD
+==================================================
+
+Create/maintain a professional mobile-first dashboard.
+
+Dashboard should contain:
+- profile
+- AI shortcut
+- business summary
+- sales
+- purchases
+- stock
+- income
+- expense
+- baki
+- tasks
+- e-commerce
+- reports
+- notifications where implemented
+
+IMPORTANT:
+
+Do not display fake numbers.
+
+If no records exist:
+show a proper empty state.
+
+Examples:
+
+"এখনো কোনো বিক্রয় রেকর্ড নেই"
+
+instead of:
+
+"৳125,000 Sales"
+
+==================================================
+11. BUSINESS SYSTEM
+==================================================
+
+Products:
+- add
+- edit
+- delete
+- search
+- filter
+- stock
+- purchase price
+- selling price
+- quantity
+- category
+- product information
+
+Purchases:
+- add
+- edit
+- delete
+- quantity
+- cost
+- supplier
+- date
+
+Sales:
+- add
+- edit
+- delete
+- customer
+- quantity
+- selling price
+- date
+
+Stock:
+Stock must remain consistent.
+
+Purchase should increase stock.
+
+Sale should decrease stock.
+
+Do not allow invalid negative stock unless the business rules explicitly support it.
+
+Use transactions where appropriate.
+
+==================================================
+12. FINANCIAL SYSTEM
+==================================================
+
+Track:
+
+Income
+Expenses
+Sales
+Purchases
+Profit/Loss
+
+Provide:
+- daily
+- weekly
+- monthly
+- yearly
+
+calculations.
+
+Formula examples:
+
+Profit = Income - Expense
+
+But ensure business-specific accounting logic is respected.
+
+Never invent financial records.
+
+==================================================
+13. BAKI KHATA
+==================================================
+
+Support:
+- customer
+- amount
+- payment
+- remaining balance
+- date
+- notes
+- edit
+- delete
+- history
+
+Ensure balance calculations remain consistent.
+
+==================================================
+14. E-COMMERCE
+==================================================
+
+Support:
+- product listing
+- product details
+- cart
+- quantity
+- checkout/order
+- order history
+- order status
+
+Payment gateway integration may remain provider-independent until configured.
+
+Do not pretend bKash/Nagad/other payment callbacks are working unless actually integrated and tested.
+
+==================================================
+15. TASKS
+==================================================
+
+Support:
+- create task
+- edit
+- delete
+- complete
+- priority
+- due date
+- status
+- search/filter
+
+==================================================
+16. DIGITAL GERMAN HOMEO HALL
+==================================================
+
+Maintain a professional record system for:
+
+- patient information
+- medical records
+- symptoms
+- diagnosis/assessment fields
+- treatment records
+- follow-up
+- dates
+- notes
+
+Do not present AI-generated medical information as a confirmed diagnosis.
+
+For medical information, clearly distinguish:
+- recorded information
+- AI-generated information
+- professional medical advice
+
+==================================================
+17. REPORTS
+==================================================
+
+Reports should be based on actual data.
+
+Support where practical:
+- sales report
+- purchase report
+- stock report
+- income report
+- expense report
+- profit/loss
+- baki report
+- task report
+- business summary
+
+Export where practical:
+- CSV
+- JSON
+- PDF
+
+==================================================
+18. FILE SYSTEM
+==================================================
+
+Support safe file handling.
+
+File types:
+HTML
+CSS
+JS
+JSON
+TXT
+CSV
+MD
+PDF
+images
+
+For code files:
+analyze safely.
+
+For PDFs:
+extract/read text where supported.
+
+For images:
+analyze image content where supported.
+
+Never execute arbitrary uploaded code.
+
+Show:
+- file name
+- type
+- size
+- upload state
+- analysis state
+- error state
+
+==================================================
+19. PROFESSIONAL UI/UX
+==================================================
+
+The application must feel like a real mobile application.
+
+Requirements:
+- mobile-first
+- responsive
+- clean spacing
+- touch-friendly buttons
+- readable Bengali text
+- professional cards
+- clear navigation
+- loading states
+- empty states
+- error states
+- success states
+- confirmation before destructive actions
+
+Avoid:
+- broken overlays
+- text behind layouts
+- duplicate buttons
+- dead buttons
+- browser-looking UI where unnecessary
+- horizontal overflow
+- inaccessible controls
+
+Support mobile keyboard behavior.
+
+==================================================
+20. NAVIGATION
+==================================================
+
+Navigation must be reliable.
+
+Existing working navigation must not be broken.
+
+Every button should either:
+- perform its action
+- navigate correctly
+- show a useful message
+
+No dead buttons.
+
+Back navigation must work correctly.
+
+==================================================
+21. AUTHENTICATION
+==================================================
+
+Implement/maintain:
+
+Login
+Create Account
+Logout
+Session persistence
+
+Registration:
+- name
+- email
+- password
+- confirmation
+
+Show clear errors.
+
+Never expose passwords.
+
+Logout must clear private client-side state appropriately.
+
+After logout, private application data must not remain visible.
+
+==================================================
+22. ADMIN PANEL
+==================================================
+
+Admin panel must be separate from normal users.
+
+Potential functions:
+- users
+- account status
+- system statistics
+- AI usage
+- limits
+- monitoring
+- security events
+- audit logs
+- account disable
+- system configuration
+
+CRITICAL:
+
+Admin privileges MUST NOT depend only on a frontend variable.
+
+Implement server-side authorization.
+
+Prepare architecture for:
+- MFA/2FA
+- audit logging
+- role-based access control
+
+Destructive admin actions require confirmation.
+
+==================================================
+23. SECURITY
+==================================================
+
+Perform a security audit.
+
+Check:
+- exposed API keys
+- secrets in frontend
+- secrets in GitHub
+- unsafe CORS
+- unrestricted APIs
+- missing authentication
+- broken authorization
+- IDOR
+- privilege escalation
+- Firebase rule weaknesses
+- storage weaknesses
+- path traversal
+- oversized requests
+- malicious input
+- XSS
+- unsafe HTML injection
+- dangerous file handling
+- sensitive error messages
+- logout leakage
+
+Never claim "100% unhackable".
+
+The goal is strong practical security.
+
+==================================================
+24. PERFORMANCE
+==================================================
+
+Check:
+- unnecessary repeated Firebase calls
+- duplicate event listeners
+- excessive rendering
+- large DOM operations
+- oversized AI requests
+- duplicate API requests
+- loading performance
+- mobile performance
+
+Use:
+- debouncing where appropriate
+- pagination where appropriate
+- caching where safe
+- efficient queries
+
+==================================================
+25. ERROR HANDLING
+==================================================
+
+Every major operation must have:
+
+Loading
+Success
+Failure
+Retry where appropriate
+
+Handle:
+- network failure
+- Firebase failure
+- Gemini failure
+- authentication failure
+- invalid data
+- missing data
+- file upload failure
+- server failure
+- timeout
+
+Do not leave users with silent failures.
+
+==================================================
+26. OFFLINE / RESILIENCE
+==================================================
+
+Where practical:
+- preserve local UI state
+- avoid losing unsaved input
+- recover gracefully after network reconnect
+- sync Firebase safely
+
+Do not create duplicate records during retries.
+
+==================================================
+27. BUSINESS INTELLIGENCE
+==================================================
+
+Business AI should eventually support:
+
+Daily business brief
+Weekly analysis
+Monthly analysis
+
+Detect:
+- low stock
+- fast-moving products
+- slow-moving products
+- rising expenses
+- falling sales
+- outstanding baki
+- unusual changes
+
+Every recommendation should explain:
+
+WHY
+WHAT DATA
+TIME PERIOD
+WHAT CHANGED
+POSSIBLE IMPACT
+NEXT STEP
+
+Do not present uncertain predictions as facts.
+
+==================================================
+28. FUTURE PREDICTIVE BUSINESS INTELLIGENCE
+==================================================
+
+Prepare architecture for:
+
+Seasonal planning
+Winter
+Summer
+Rainy season
+Festival periods
+Agricultural cycles
+Academic cycles
+
+Examples:
+- products likely to run out
+- products to prepare before season
+- slow-moving stock
+- possible business risks
+- possible opportunities
+
+Predictions must be evidence-based.
+
+Never guarantee future outcomes.
+
+==================================================
+29. SOUTH ASIA SUPPORT
+==================================================
+
+Architecture should support:
+
+Bangladesh
+India
+Pakistan
+South Asia
+International expansion
+
+Currencies:
+BDT
+INR
+PKR
+
+Languages:
+Bangla
+English
+Hindi
+Urdu
+Banglish
+
+Do not hard-code the system to one business type.
+
+Support future:
+- multiple businesses
+- multiple branches
+- configurable business types
+
+==================================================
+30. MEMORY
+==================================================
+
+Separate:
+
+Conversation memory
+from
+Long-term business data
+
+AI must not treat an old conversation as authoritative business data.
+
+Actual Firebase records are authoritative.
+
+Never invent a record based on memory.
+
+==================================================
+31. DATA INTEGRITY
+==================================================
+
+Every important operation must maintain consistent data.
+
+Example:
+
+Sale:
+- sale record created
+- stock decreases
+- financial calculation updates
+
+Purchase:
+- purchase record created
+- stock increases
+- financial calculation updates
+
+Baki:
+- amount added
+- payment reduces balance
+- remaining balance remains accurate
+
+Prevent duplicate submissions.
+
+==================================================
+32. EXPORT AND BACKUP
+==================================================
+
+Provide architecture for:
+
+- user data export
+- JSON export
+- CSV export
+- PDF reports
+- project source backup
+- GitHub versioning
+
+Never expose secrets in exported project files.
+
+Provide safe:
+
+.env.example
+
+without actual secret values.
+
+==================================================
+33. PWA
+==================================================
+
+Prepare the application as a Progressive Web App where practical.
+
+Include:
+- manifest
+- icons
+- mobile installation support
+- service worker where appropriate
+- offline-friendly shell
+
+Do not claim PWA is complete unless tested.
+
+==================================================
+34. ANDROID
+==================================================
+
+Prepare architecture for future:
+
+APK
+AAB
+Google Play Store
+
+Possible approaches:
+- TWA
+- Capacitor
+- appropriate WebView wrapper
+
+Do not claim APK/AAB has been built unless it has actually been compiled and tested.
+
+==================================================
+35. FREE / PRO ARCHITECTURE
+==================================================
+
+Prepare architecture for:
+
+FREE
+PRO
+
+Potential future limits:
+- AI usage
+- file limits
+- business features
+- reports
+- advanced intelligence
+
+But do not create fake payment functionality.
+
+Provider-independent payment architecture.
+
+Server-authoritative subscription status.
+
+==================================================
+36. ADVERTISEMENT ARCHITECTURE
+==================================================
+
+Free version may eventually support Adsterra or another provider.
+
+Do not add fake advertisements.
+
+Keep advertising integration isolated so it can be enabled later.
+
+==================================================
+37. FUTURE INTEGRATIONS
+==================================================
+
+Prepare clean abstraction for future:
+
+- AI providers
+- search providers
+- payment providers
+- notification providers
+- analytics
+- external business services
+
+Do not claim an integration exists until it is actually configured and tested.
+
+==================================================
+38. CODING AGENT BEHAVIOR
+==================================================
+
+When fixing an issue:
+
+FIRST:
+Inspect existing code.
+
+THEN:
+Explain internally what is wrong.
+
+THEN:
+Make the smallest safe change.
+
+THEN:
+Test.
+
+THEN:
+Check regression.
+
+Do not rewrite large files unnecessarily.
+
+If a large file must be replaced:
+create a backup/checkpoint first.
+
+==================================================
+39. TESTING
+==================================================
+
+Perform comprehensive QA.
+
+Test:
+
+1. Login
+2. Registration
+3. Logout
+4. Session persistence
+5. Dashboard
+6. Navigation
+7. AI
+8. Bengali AI
+9. Banglish AI
+10. English AI
+11. General AI
+12. Business AI
+13. Content Creator
+14. Coding Assistant
+15. Problem Solver
+16. Builder
+17. AI history
+18. file upload
+19. image handling
+20. PDF handling
+21. TXT
+22. CSV
+23. JSON
+24. Markdown
+25. HTML
+26. CSS
+27. JavaScript
+28. Products
+29. Purchases
+30. Sales
+31. Stock
+32. Income
+33. Expenses
+34. Profit/loss
+35. Baki
+36. E-commerce
+37. Tasks
+38. Homeo
+39. Reports
+40. Settings
+41. Firebase persistence
+42. User isolation
+43. Admin security
+44. API security
+45. error handling
+46. mobile layout
+47. keyboard behavior
+48. logout privacy
+49. duplicate actions
+50. regression
+
+==================================================
+40. SECURITY QA
+==================================================
+
+Explicitly test:
+
+Normal user → admin
+Normal user → another user's data
+Unauthenticated → private API
+Modified frontend → protected action
+Invalid user ID
+Invalid document ID
+Invalid file path
+Oversized request
+Malformed JSON
+Missing prompt
+Missing authentication
+API abuse
+Secret exposure
+
+All must fail safely.
+
+==================================================
+41. API QA
+==================================================
+
+Test:
+
+GET /api/health
+
+Expected:
+
+{
+  "ok": true
+}
+
+Test:
+
+POST /api/ai-chat
+
+with:
+
+{
+  "prompt": "বাংলাদেশের রাজধানী কী?",
+  "history": [],
+  "context": {},
+  "app": {
+    "name": "NIVORA ONE"
+  }
+}
+
+Expected:
+a valid AI response.
+
+If Gemini fails:
+return structured error.
+
+Never return raw secret/configuration information.
+
+==================================================
+42. REAL DATA RULE
+==================================================
+
+This rule is absolute:
+
+DO NOT INVENT DATA.
+
+If the database contains:
+
+0 products
+
+then say:
+"No products have been added yet."
+
+Do not show:
+10 products.
+
+If sales data is absent:
+do not calculate fake sales.
+
+If AI does not know:
+say that it does not know.
+
+==================================================
+43. PROFESSIONAL AI RESPONSE STYLE
+==================================================
+
+For complex problems use:
+
+সমস্যা:
+...
+
+কারণ:
+...
+
+সমাধান:
+...
+
+যা করতে হবে:
+1.
+2.
+3.
+
+পরীক্ষা:
+...
+
+For simple questions, answer simply.
+
+Do not unnecessarily make every response long.
+
+==================================================
+44. CURRENT WEB INFORMATION
+==================================================
+
+Only use current web information if a real web/search capability is actually available.
+
+Never pretend to have searched the internet.
+
+If current information cannot be verified:
+say so.
+
+==================================================
+45. NO FALSE CLAIMS
+==================================================
+
+Never claim:
+- deployed
+- published
+- tested
+- compiled
+- integrated
+- connected
+- secure
+- payment working
+- APK generated
+
+unless it actually happened.
+
+Clearly distinguish:
+
+Implemented
+Tested
+Partially implemented
+Not implemented
+Requires external configuration
+
+==================================================
+46. PRODUCTION QUALITY
+==================================================
+
+Before declaring completion, verify:
+
+- no broken navigation
+- no dead buttons
+- no obvious UI errors
+- no fake data
+- no exposed secrets
+- no broken Firebase rules
+- no broken authentication
+- no broken AI endpoint
+- no console-critical errors
+- no obvious mobile layout problems
+- no duplicate records
+- no broken stock calculations
+- no broken financial calculations
+
+==================================================
+47. DOCUMENTATION
+==================================================
+
+Create/update documentation explaining:
+
+- project structure
+- local development
+- environment variables
+- Firebase configuration
+- AI backend
+- deployment
+- security
+- testing
+- backup
+- future Android build
+
+Never put real secret values in documentation.
+
+==================================================
+48. ENVIRONMENT VARIABLES
+==================================================
+
+Use:
+
+GEMINI_API_KEY=
+GEMINI_MODEL=
+
+Optionally:
+
+NODE_ENV=
+APP_ENV=
+
+Keep actual secrets outside GitHub.
+
+Provide:
+
+.env.example
+
+only.
+
+==================================================
+49. DEPLOYMENT ARCHITECTURE
+==================================================
+
+Keep deployment provider-independent.
+
+The system should be deployable using appropriate Node-compatible hosting.
+
+Frontend:
+NIVORA ONE
+
+Backend:
+Node.js server
+
+AI:
+Gemini API
+
+Database:
+Firebase
+
+Authentication:
+Firebase Auth
+
+Storage:
+Firebase Storage
+
+Source:
+GitHub
+
+==================================================
+50. FINAL CHECKPOINT
+==================================================
+
+Before declaring the project complete:
+
+1. Save/commit working source.
+2. Preserve Firebase configuration.
+3. Verify backend.
+4. Verify AI.
+5. Verify authentication.
+6. Verify Firestore.
+7. Verify Storage.
+8. Verify business modules.
+9. Verify e-commerce.
+10. Verify tasks.
+11. Verify homeo module.
+12. Verify admin.
+13. Run security tests.
+14. Run regression tests.
+15. Run mobile UI tests.
+16. Create final backup.
+17. Document what is complete.
+18. Document what requires external configuration.
+
+==================================================
+51. FINAL REPORT
+==================================================
+
+At the end provide a clear report with:
+
+COMPLETED
+- ...
+
+TESTED
+- ...
+
+PARTIALLY COMPLETE
+- ...
+
+REQUIRES EXTERNAL CONFIGURATION
+- ...
+
+NOT YET BUILT
+- ...
+
+SECURITY STATUS
+- ...
+
+DEPLOYMENT STATUS
+- ...
+
+APK STATUS
+- ...
+
+AAB STATUS
+- ...
+
+IMPORTANT:
+Do not call the project "100% complete" merely because the code compiles.
+
+==================================================
+52. MASTER PRINCIPLE
+==================================================
+
+NIVORA ONE must evolve as a professional, secure, expandable platform.
+
+The ultimate architecture is:
+
+USER
+↓
+NIVORA ONE UI
+↓
+AI / BUSINESS / CONTENT / CODING / PROBLEM SOLVING / BUILDER
+↓
+SECURE BACKEND
+↓
+GEMINI / FUTURE AI PROVIDERS
+↓
+FIREBASE AUTH + FIRESTORE + STORAGE
+↓
+BUSINESS DATA
+↓
+INTELLIGENCE
+↓
+ADVICE
+↓
+USER CONFIRMATION
+↓
+ACTION
+↓
+MONITORING
+↓
+LEARNING
+↓
+IMPROVEMENT
+
+CORE LOOP:
+
+TRACK
+→ UNDERSTAND
+→ DETECT
+→ PREDICT
+→ EXPLAIN
+→ ADVISE
+→ PLAN
+→ CONFIRM
+→ ACT
+→ MONITOR
+→ LEARN
+→ IMPROVE
+
+The AI must support the human user, not silently make important decisions on the user's behalf.
+
+Destructive or important external actions require user confirmation.
+
+FINAL GOLDEN RULE:
+
+PRESERVE
+→ BUILD
+→ INTEGRATE
+→ TEST
+→ SECURE
+→ VERIFY
+→ BACKUP
+→ RELEASE
+
+Do not destroy existing working work.
+
+Do not invent data.
+
+Do not expose secrets.
+
+Do not claim work is complete unless it has actually been implemented and tested.

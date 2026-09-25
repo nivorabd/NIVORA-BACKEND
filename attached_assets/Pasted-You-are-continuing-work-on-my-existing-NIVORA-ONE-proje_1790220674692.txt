@@ -1,0 +1,332 @@
+You are continuing work on my existing NIVORA ONE project.
+
+IMPORTANT:
+Do NOT create a new app.
+Do NOT remove any existing feature.
+Do NOT replace the existing working AI backend.
+Do NOT change Firebase security rules unless absolutely necessary.
+Do NOT break the existing login, navigation, Business, E-commerce, Homeo, Admin, Task, Baki or other modules.
+
+CURRENT STATUS:
+The existing NIVORA ONE project is running successfully on Replit.
+
+Already verified:
+- Gemini AI backend works
+- Bengali AI response works
+- Banglish and English support exists
+- Prompt, history and business context are sent to AI
+- Firebase Authentication works
+- Create Account works
+- Login works
+- Logout works
+- Protected navigation works
+- Firestore user data isolation works
+- Business navigation works
+- E-commerce navigation works
+
+The current AI backend must remain working.
+
+MY NEW PRODUCT GOAL:
+
+I want NIVORA ONE to become an all-in-one AI-powered professional platform.
+
+Existing NIVORA ONE features must remain:
+- Dashboard
+- NIVORA AI
+- Business Management
+- Income / Expense
+- Products
+- Stock
+- Purchase
+- Sales
+- Baki / Accounts Receivable
+- Tasks
+- E-commerce
+- Cart
+- Digital German Homeo Hall
+- Admin Panel
+- Login
+- Create Account
+- Firebase Authentication
+- Firestore
+- Firebase Storage
+
+Now extend the existing NIVORA AI concept into multiple AI capabilities.
+
+1. NIVORA AI GENERAL ASSISTANT
+
+Keep the existing AI and improve its architecture so it can handle:
+
+- Bengali
+- Banglish
+- English
+- General questions
+- Mathematics
+- Coding
+- Business questions
+- Business analysis
+- Daily tasks
+- Professional writing
+- Research-style assistance when supported
+- User-provided files and data when supported
+
+If the user asks in Bengali, answer naturally in Bengali.
+
+Never invent the user's business records.
+
+2. NIVORA BUSINESS AI
+
+Create an AI capability that can understand the user's own app data when authorized and supplied.
+
+It should be able to analyze:
+
+- Sales
+- Purchases
+- Stock
+- Income
+- Expenses
+- Profit/loss
+- Customers
+- Baki
+- Orders
+- Tasks
+- Products
+
+Example questions:
+
+"এই মাসে আমার মোট বিক্রয় কত?"
+
+"কোন পণ্য বেশি বিক্রি হয়েছে?"
+
+"আমার বাকি কত?"
+
+"কোন পণ্যের stock কম?"
+
+"এই মাসের income এবং expense বিশ্লেষণ করো।"
+
+The AI must calculate from real stored data and must never invent missing records.
+
+3. NIVORA CONTENT CREATOR
+
+Add a future-ready Content Creator section inside NIVORA AI.
+
+It should support generating:
+
+- Facebook posts
+- Facebook captions
+- YouTube titles
+- YouTube descriptions
+- Short video scripts
+- Advertisement copy
+- Product descriptions
+- Business promotional content
+- Blog/article drafts
+- Bengali and English content
+
+Keep this integrated with NIVORA AI rather than creating an unrelated application.
+
+4. NIVORA CODING ASSISTANT
+
+Add a Coding Assistant capability.
+
+It should help users with:
+
+- HTML
+- CSS
+- JavaScript
+- Python
+- Node.js
+- APIs
+- Firebase
+- databases
+- debugging
+- explaining code
+- improving code
+
+It should be able to generate complete code when requested.
+
+5. NIVORA APP / WEBSITE BUILDER
+
+Design the architecture for a future AI App Builder.
+
+Example user request:
+
+"আমার জন্য একটি দোকানের website তৈরি করো।"
+
+The system should eventually be able to:
+
+- understand requirements
+- generate files
+- create HTML/CSS/JS
+- preview the result
+- modify the project based on user instructions
+
+IMPORTANT:
+Do NOT falsely claim that NIVORA has full Replit functionality unless the required Replit/API capabilities actually exist.
+
+Before implementing any direct Replit integration, inspect the current official Replit documentation/API capabilities available to this project.
+
+If Replit integration requires an external API, OAuth, paid service, or permission, clearly identify that requirement.
+
+Do not expose API keys or secrets.
+
+6. REPLIT-STYLE DEVELOPMENT WORKFLOW
+
+I want NIVORA to provide a Replit-like AI coding experience where technically possible.
+
+Plan for:
+
+- project files
+- code generation
+- code editing
+- preview
+- debugging
+- AI instructions
+- project context
+- safe file modifications
+
+But preserve the distinction between NIVORA's own coding tools and actual Replit services.
+
+7. FREE / PRO SYSTEM
+
+Design the application so it can support two user levels:
+
+FREE
+- Core NIVORA AI
+- Basic business tools
+- Basic content generation
+- Basic coding assistance
+- Existing app features
+- Advertising
+
+PRO
+- Higher AI usage limits
+- Advanced Business AI
+- Advanced Content Creator
+- Advanced Coding Assistant
+- Advanced App/Website Builder
+- More file processing
+- Advanced reports
+- Additional AI features
+
+IMPORTANT:
+Do not hard-code arbitrary prices yet.
+
+Create a clean entitlement/plan architecture so pricing can be configured later.
+
+Example conceptual data:
+
+plan: "free" | "pro"
+
+Do not allow users to bypass Pro restrictions simply by editing browser JavaScript.
+
+8. ADSTERra MONETIZATION
+
+Prepare the application architecture for Adsterra advertising.
+
+IMPORTANT:
+Do NOT invent an Adsterra publisher ID or ad code.
+
+Do NOT add fake advertising code.
+
+Create clearly marked integration locations/components where the real Adsterra code can later be inserted.
+
+Ads should primarily be associated with Free users according to the final monetization rules.
+
+Pro users can later receive a different advertising policy.
+
+Do not make advertising interfere with:
+- Login
+- Navigation
+- AI chat
+- Business records
+- Payment
+- Security
+- Mobile usability
+
+9. PRO PAYMENT ARCHITECTURE
+
+Prepare the application for future Pro subscription/payment integration.
+
+Do NOT pretend a payment gateway is already active.
+
+Create a provider-independent architecture so a real payment provider can later be connected.
+
+The server must be authoritative for Pro entitlement.
+
+Never trust:
+
+localStorage.plan
+client-side JavaScript
+URL parameters
+or browser-only values
+
+for granting Pro access.
+
+10. SECURITY
+
+Maintain:
+
+- Gemini API key server-side
+- Firebase authentication
+- Firestore user isolation
+- protected user data
+- server-side authorization for paid features
+- no secrets in index.html
+- no secrets in client-side JavaScript
+
+11. MOBILE-FIRST UI
+
+The application is primarily used on mobile.
+
+Do not redesign the entire UI unnecessarily.
+
+New AI sections should fit the existing NIVORA ONE design.
+
+Use clear navigation such as:
+
+NIVORA AI
+├── General AI
+├── Business AI
+├── Content Creator
+├── Coding Assistant
+└── App / Website Builder
+
+Do not duplicate existing features unnecessarily.
+
+12. IMPORTANT DEVELOPMENT PROCESS
+
+Before modifying files:
+
+A. Inspect the entire project.
+B. Identify current architecture.
+C. Identify existing AI endpoint.
+D. Identify Firebase integration.
+E. Identify existing navigation.
+F. Identify existing modules.
+G. Identify where plan/entitlement logic should live.
+H. Identify how Adsterra could safely be integrated.
+I. Identify what Replit integration is actually possible through documented APIs.
+
+Then give me a concise implementation plan.
+
+DO NOT immediately rewrite the application.
+
+First report:
+
+1. What already exists
+2. What can be reused
+3. What needs to be added
+4. What requires an external service/API
+5. What should NOT be implemented yet
+6. Any security concerns
+7. The safest implementation order
+
+After the plan is reviewed, implement the changes in small safe stages.
+
+MOST IMPORTANT:
+The currently working NIVORA ONE AI and Firebase system must remain functional after every stage.
+
+Do not delete working code merely to make the architecture cleaner.
+
+Use the simplest reliable architecture possible for a non-technical owner.

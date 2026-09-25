@@ -1,0 +1,86 @@
+You are working on my existing NIVORA ONE project.
+
+IMPORTANT:
+Do NOT create a new app from scratch.
+Do NOT delete or replace my existing working features.
+First inspect the entire existing project and understand how it works.
+
+My goal:
+Make this existing NIVORA ONE web app fully functional and professional.
+
+Existing major features that must be preserved:
+- Dashboard
+- AI Chat
+- Bengali + English AI conversation
+- Business management
+- Income and expense
+- Products and stock
+- Purchase and sales
+- Baki / accounts receivable
+- Tasks
+- E-commerce
+- Cart
+- Digital German Homeo Hall module
+- Admin panel
+- Login / Create Account
+- Firebase Authentication
+- Firestore
+- Firebase Storage
+
+CURRENT PROBLEM:
+The frontend works, but the AI backend connection has been unreliable.
+I previously tried Netlify Functions, Cloudflare Workers and Vercel.
+Do not assume those old backend implementations are correct.
+
+FIRST:
+1. Inspect every relevant file.
+2. Find the current AI request code in index.html and related files.
+3. Find exactly what endpoint the frontend is calling.
+4. Find any broken, duplicated, fenced, unreachable or conflicting JavaScript.
+5. Check Firebase initialization and authentication integration.
+6. Check that existing navigation and business features are not broken.
+
+THEN:
+Build the simplest reliable server-side AI connection for this existing app.
+
+Use Gemini API securely:
+- Never put GEMINI_API_KEY inside index.html.
+- Never expose the API key to the browser.
+- Use a server-side environment variable.
+- Use model: gemini-2.5-flash.
+- The frontend must send prompt, history and app/business context to the backend.
+- The backend must return JSON in this format:
+  { "ok": true, "answer": "..." }
+
+If an error occurs, return:
+  { "ok": false, "error": "..." }
+
+AI behavior:
+- Understand Bengali, Banglish and English.
+- Bengali questions should receive natural Bengali answers.
+- English questions should receive English answers.
+- Use supplied NIVORA business data when available.
+- Never invent the user's business records.
+- Help with general questions, mathematics, coding and business.
+- Keep conversation history when supplied.
+
+VERY IMPORTANT:
+Do not merely tell me what code I should change.
+Actually inspect the project and make the required changes in the project.
+
+Before changing anything:
+Explain briefly what files you found and what is currently wrong.
+
+Then fix the project.
+
+After fixing:
+Run/test the application.
+Test the AI endpoint.
+Test that the main dashboard still opens.
+Test navigation.
+Test Firebase authentication integration.
+Test that existing business features remain intact.
+
+Do not remove existing features just to make the AI work.
+
+Keep the implementation as simple as possible for a non-technical user.
