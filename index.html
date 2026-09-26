@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" ="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#030712">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <title>NIVORA ONE - All-in-Onecontent Professional System & Hub</title>
     
     <!-- Tailwind CSS CDN -->
@@ -1272,13 +1276,17 @@ if (typeof loadNivoraFromFirebase === "function") {
             <div class="glass-panel p-4 rounded-2xl flex items-center justify-between flex-wrap gap-3">
                 <div>
                     <h2 class="font-bold text-white text-base">Digital Baki Khata</h2>
-                    <p class="text-xs text-slate-400">কাস্টমার বাকি এবং লেনদেন খাতা</p>
+                    <p class="text-xs text-slate-400">কাস্টমার বাকি, ফোন নম্বর এবং WhatsApp রিমাইন্ডার</p>
                 </div>
                 <button onclick="openAddCustomerModal()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition">
                     <i class="fa-solid fa-user-plus mr-1"></i> নতুন কাস্টমার
                 </button>
             </div>
             <div class="glass-panel p-4 rounded-2xl space-y-3">
+                <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-xs text-slate-300">
+                    <i class="fa-brands fa-whatsapp text-emerald-400 mr-1"></i>
+                    কাস্টমারের নম্বর সংরক্ষণ করলে এক ক্লিকে বাকি টাকার প্রস্তুত বার্তা WhatsApp-এ খুলবে। পাঠানোর আগে বার্তাটি দেখে নিন।
+                </div>
                 <div id="baki-customers-list" class="space-y-2"></div>
             </div>
         </section>
@@ -1328,6 +1336,7 @@ if (typeof loadNivoraFromFirebase === "function") {
                     <input type="text" id="homeo-phone" placeholder="মোবাইল নম্বর" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200">
                     <textarea id="homeo-symptom" placeholder="রোগের লক্ষণ ও প্রেসক্রিপশন নোট..." rows="2" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-200 sm:col-span-2"></textarea>
                 </div>
+                <p class="text-[11px] text-slate-500"><i class="fa-brands fa-whatsapp text-emerald-400 mr-1"></i>সংরক্ষিত রেকর্ড থেকে ডাঃ আবু জার ফয়েজীকে WhatsApp বার্তা পাঠানো যাবে: 01912420827</p>
                 <button onclick="saveHomeoRecord()" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-medium py-2.5 rounded-xl text-sm transition">রেকর্ড সংরক্ষণ করুন</button>
             </div>
             <div class="glass-panel p-4 rounded-2xl space-y-2">
@@ -2759,23 +2768,115 @@ console.log(
         function openAddCustomerModal() {
             const name = prompt('কাস্টমার নাম দিন:');
             if (!name) return;
+            const phone = prompt('কাস্টমারের WhatsApp নম্বর দিন (যেমন 019XXXXXXXX):') || '';
             const due = parseFloat(prompt('প্রারম্ভিক বাকি (টাকা):') || '0');
-            appState.customers.push({ id: Date.now().toString(), name, due, paid: 0 });
+            appState.customers.push({
+                id: Date.now().toString(),
+                name: name.trim(),
+                phone: phone.trim(),
+                due: Math.max(0, due),
+                paid: 0,
+                createdAt: new Date().toISOString()
+            });
             saveState();
             renderBakiCustomers();
+        }
+
+        function normalizeWhatsAppNumber(phone) {
+            const digits = String(phone || '').replace(/\D/g, '');
+            if (digits.startsWith('880')) return digits;
+            if (digits.startsWith('0')) return `88${digits}`;
+            return digits;
+        }
+
+        function openWhatsAppMessage(phone, message) {
+            const number = normalizeWhatsAppNumber(phone);
+            if (!number || number.length < 10) {
+                alert('সঠিক WhatsApp নম্বর সংরক্ষণ করুন।');
+                return;
+            }
+            const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        function sendBakiReminder(customerId) {
+            const customer = appState.customers.find(item => item.id === customerId);
+            if (!customer) return;
+            const due = Math.max(0, Number(customer.due) || 0);
+            const paid = Math.max(0, Number(customer.paid) || 0);
+            const remaining = Math.max(0, due - paid);
+            if (!customer.phone) {
+                alert('এই কাস্টমারের WhatsApp নম্বর নেই। নতুন কাস্টমার যোগ করার সময় নম্বরটি সংরক্ষণ করুন।');
+                return;
+            }
+            const message = `আসসালামু আলাইকুম ${customer.name || 'প্রিয় কাস্টমার'},\n\nআপনার কাছে আমাদের দোকানের মোট বাকি ৳${remaining.toLocaleString('en-IN')} টাকা আছে। অনুগ্রহ করে সুবিধামতো পরিশোধ করবেন।\n\n— NIVORA ONE`;
+            customer.lastReminderAt = new Date().toISOString();
+            customer.reminderCount = (Number(customer.reminderCount) || 0) + 1;
+            saveState();
+            openWhatsAppMessage(customer.phone, message);
         }
 
         function renderBakiCustomers() {
             const list = document.getElementById('baki-customers-list');
             if (!list) return;
             list.innerHTML = appState.customers.length ? appState.customers.map(c => `
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                    <div>
-                        <div class="font-bold text-white">${c.name}</div>
-                        <div class="text-slate-400">বাকি: <span class="text-rose-400 font-bold">৳${c.due}</span></div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                    <div class="min-w-0">
+                        <div class="font-bold text-white truncate">${escapeAIText(c.name || 'নামহীন কাস্টমার')}</div>
+                        <div class="text-slate-400">বাকি: <span class="text-rose-400 font-bold">৳${Math.max(0, (Number(c.due) || 0) - (Number(c.paid) || 0)).toLocaleString('en-IN')}</span></div>
+                        <div class="text-[11px] text-slate-500">${c.phone ? `WhatsApp: ${escapeAIText(c.phone)}` : 'WhatsApp নম্বর নেই'}</div>
+                        ${c.lastReminderAt ? `<div class="text-[10px] text-emerald-500/80">শেষ রিমাইন্ডার: ${new Date(c.lastReminderAt).toLocaleDateString('bn-BD')}</div>` : ''}
                     </div>
+                    <button onclick="sendBakiReminder('${c.id}')" class="shrink-0 px-3 py-2 rounded-lg ${c.phone ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-slate-800 text-slate-500'} font-bold transition"><i class="fa-brands fa-whatsapp mr-1"></i>বাকি জানিয়ে দিন</button>
                 </div>
             `).join('') : '<div class="text-xs text-slate-500 text-center py-2">কোনো কাস্টমার নেই</div>';
+        }
+
+        function sendHomeoDoctorMessage(recordId) {
+            const record = appState.homeo.find(item => item.id === recordId);
+            if (!record) return;
+            const message = `আসসালামু আলাইকুম ডাক্তার,\n\nGerman Homeo Hall থেকে রোগী ${record.patient || 'নাম দেওয়া হয়নি'}-এর প্রেসক্রিপশন/লক্ষণ রিভিউ করার জন্য পাঠালাম।\nরোগীর মোবাইল: ${record.phone || 'দেওয়া হয়নি'}\nলক্ষণ ও নোট: ${record.symptom || 'দেওয়া হয়নি'}\n\n— NIVORA ONE`;
+            openWhatsAppMessage('01912420827', message);
+        }
+
+        function deleteHomeoRecord(recordId) {
+            if (!confirm('এই রোগীর রেকর্ডটি মুছে ফেলতে চান?')) return;
+            appState.homeo = appState.homeo.filter(item => item.id !== recordId);
+            saveState();
+            renderHomeoRecords();
+        }
+
+        function editHomeoRecord(recordId) {
+            const record = appState.homeo.find(item => item.id === recordId);
+            if (!record) return;
+            document.getElementById('homeo-patient').value = record.patient || '';
+            document.getElementById('homeo-phone').value = record.phone || '';
+            document.getElementById('homeo-symptom').value = record.symptom || '';
+            appState.homeo = appState.homeo.filter(item => item.id !== recordId);
+            saveState();
+            renderHomeoRecords();
+            document.getElementById('homeo-patient').focus();
+        }
+
+        function renderHomeoRecords() {
+            const list = document.getElementById('homeo-records-list');
+            if (!list) return;
+            list.innerHTML = appState.homeo.length ? appState.homeo.map(h => `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-2">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0">
+                            <div class="font-bold text-teal-400">${escapeAIText(h.patient || 'নামহীন রোগী')}</div>
+                            <div class="text-slate-500">${escapeAIText(h.date || '')}${h.phone ? ` · ${escapeAIText(h.phone)}` : ''}</div>
+                        </div>
+                        <div class="flex gap-1 shrink-0">
+                            <button onclick="editHomeoRecord('${h.id}')" class="px-2 py-1 rounded-lg bg-slate-800 text-blue-400" title="এডিট"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteHomeoRecord('${h.id}')" class="px-2 py-1 rounded-lg bg-slate-800 text-rose-400" title="ডিলিট"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="text-slate-300 whitespace-pre-wrap">${escapeAIText(h.symptom || 'কোনো নোট নেই')}</div>
+                    <button onclick="sendHomeoDoctorMessage('${h.id}')" class="w-full px-3 py-2 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/20 font-bold transition"><i class="fa-brands fa-whatsapp mr-1"></i>ডাক্তারের কাছে WhatsApp পাঠান</button>
+                </div>
+            `).join('') : '<div class="text-xs text-slate-500 text-center py-2">কোনো রেকর্ড নেই</div>';
         }
 
         function updateCartBadge() {
@@ -2818,24 +2919,23 @@ console.log(
 
         // --- Homeo & Admin ---
         function saveHomeoRecord() {
+            const phone = document.getElementById('homeo-phone').value.trim();
             const patient = document.getElementById('homeo-patient').value.trim();
             const symptom = document.getElementById('homeo-symptom').value.trim();
-            if (!patient) return;
-            appState.homeo.push({ id: Date.now().toString(), patient, symptom, date: new Date().toLocaleDateString() });
+            if (!patient || !symptom) {
+                alert('রোগীর নাম ও লক্ষণ/প্রেসক্রিপশন নোট দিন।');
+                return;
+            }
+            appState.homeo.push({
+                id: Date.now().toString(),
+                patient,
+                phone,
+                symptom,
+                date: new Date().toLocaleDateString('bn-BD')
+            });
             saveState();
             renderHomeoRecords();
             alert('হোমিও রেকর্ড সংরক্ষিত হয়েছে!');
-        }
-
-        function renderHomeoRecords() {
-            const list = document.getElementById('homeo-records-list');
-            if (!list) return;
-            list.innerHTML = appState.homeo.length ? appState.homeo.map(h => `
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
-                    <div class="font-bold text-teal-400">${h.patient}</div>
-                    <div class="text-slate-300">নোট: ${h.symptom}</div>
-                </div>
-            `).join('') : '<div class="text-xs text-slate-500 text-center py-2">কোনো রেকর্ড নেই</div>';
         }
 
         function renderAdminStats() {
@@ -2906,6 +3006,26 @@ console.log(
 
             const datedSales = sales.map(normalizeTransaction).filter(record => record.dateValue);
             const datedPurchases = purchases.map(normalizeTransaction).filter(record => record.dateValue);
+            const currentMonth = new Date().getMonth();
+            const lastYearStart = nowMs - (365 * dayMs);
+            const seasonalMonthTotals = Array.from({ length: 12 }, () => 0);
+            datedSales
+                .filter(record => record.dateValue.getTime() >= lastYearStart)
+                .forEach(record => {
+                    seasonalMonthTotals[record.dateValue.getMonth()] += record.qty;
+                });
+            const observedSeasonalMonths = seasonalMonthTotals.filter(total => total > 0);
+            const averageMonthlyDemand = observedSeasonalMonths.length
+                ? observedSeasonalMonths.reduce((total, value) => total + value, 0) / observedSeasonalMonths.length
+                : 0;
+            const seasonalFactor = averageMonthlyDemand > 0 && seasonalMonthTotals[currentMonth] > 0 && observedSeasonalMonths.length >= 3
+                ? Math.min(1.5, Math.max(0.75, seasonalMonthTotals[currentMonth] / averageMonthlyDemand))
+                : 1;
+            const seasonalLabel = seasonalFactor > 1.1
+                ? 'এই মাসের চাহিদা ইতিহাসের গড়ের চেয়ে বেশি'
+                : seasonalFactor < 0.9
+                    ? 'এই মাসের চাহিদা ইতিহাসের গড়ের চেয়ে কম'
+                    : 'এই মাসে উল্লেখযোগ্য মৌসুমি ওঠানামা ধরা পড়েনি';
             const inWindow = (record, startMs, endMs) => {
                 const time = record.dateValue ? record.dateValue.getTime() : NaN;
                 return Number.isFinite(time) && time >= startMs && time <= endMs;
@@ -2932,7 +3052,7 @@ console.log(
                     .filter(record => record.productId === String(product.id) && inWindow(record, currentStart, nowMs))
                     .reduce((total, record) => total + record.totalPrice, 0);
                 const averageDaily = currentUnits / 30;
-                const forecast30 = Math.ceil(averageDaily * 30);
+                const forecast30 = Math.ceil(averageDaily * 30 * seasonalFactor);
                 const safetyStock = forecast30 > 0 ? Math.max(1, Math.ceil(forecast30 * 0.25)) : 0;
                 const reorderQty = Math.max(0, forecast30 + safetyStock - Math.max(0, numericValue(product.qty)));
                 const coverageDays = averageDaily > 0 ? numericValue(product.qty) / averageDaily : null;
@@ -2951,6 +3071,7 @@ console.log(
                     safetyStock,
                     reorderQty,
                     coverageDays,
+                    seasonalFactor,
                     trend
                 };
             });
@@ -3062,6 +3183,12 @@ console.log(
                     'Supplier price, cash flow ও actual demand যাচাই করে purchase করুন; Radar নিজে order দেয় না।');
             }
 
+            if (datedSales.length >= 3) {
+                addSignal(seasonalFactor > 1.1 ? 'warning' : 'info', 'fa-cloud-sun', 'মৌসুমি চাহিদা বিশ্লেষণ',
+                    `${seasonalLabel}। অগ্রিম stock নির্দেশনায় ${Math.round(seasonalFactor * 100)}% demand factor ব্যবহার করা হয়েছে।`,
+                    'মাসভিত্তিক sales history, বর্তমান stock ও supplier lead-time একসাথে দেখে অগ্রিম purchase করুন।');
+            }
+
             if (pendingOrders.length) {
                 addSignal('info', 'fa-truck-fast', 'Pending orders',
                     `${pendingOrders.length}টি order এখনো completed বা delivered নয়।`,
@@ -3145,7 +3272,7 @@ console.log(
                         <div class="flex items-center justify-between gap-3 mb-3">
                             <div>
                                 <h4 class="text-sm font-bold text-cyan-100"><i class="fa-solid fa-compass-drafting mr-1.5"></i>Future planning</h4>
-                                <p class="text-[11px] text-slate-400 mt-1">${datedSales.length ? 'সাম্প্রতিক sales run-rate থেকে হিসাব' : 'Sales entry যোগ করলে planning চালু হবে'}</p>
+                                <p class="text-[11px] text-slate-400 mt-1">${datedSales.length ? `run-rate + মৌসুমি factor (${Math.round(seasonalFactor * 100)}%)` : 'Sales entry যোগ করলে planning চালু হবে'}</p>
                             </div>
                             <span class="text-[10px] text-slate-500">${datedSales.length} dated sales records</span>
                         </div>
@@ -3164,7 +3291,7 @@ console.log(
                                 <div class="text-[11px] text-slate-400">${planRows || 'বর্তমান run-rate অনুযায়ী অতিরিক্ত reorder প্রয়োজন দেখা যায়নি।'}</div>
                             </div>
                         </div>
-                        <p class="text-[10px] text-slate-500 mt-3">Seasonality বা market data নেই; ৩৬৫ দিনের সংখ্যা কেবল বর্তমান average daily sales ধরে run-rate estimate।</p>
+                        <p class="text-[10px] text-slate-500 mt-3">মৌসুমি factor কেবল সংরক্ষিত dated sales history থেকে তৈরি; external market data বা নিশ্চিত ভবিষ্যদ্বাণী নয়।</p>
                     </div>
                 `;
             }
@@ -3198,8 +3325,8 @@ const NIVORA_AI_MODES = {
         description: 'সাধারণ প্রশ্ন, তথ্য ও দৈনন্দিন সহায়তা'
     },
     business: {
-        label: 'Business AI',
-        description: 'ব্যবসা, হিসাব, বিশ্লেষণ ও গণনা'
+        label: 'Business Radar Agent',
+        description: 'মৌসুমি চাহিদা, বাকি, cashflow ও advance stock নির্দেশনা'
     },
     content: {
         label: 'Content Creator',
@@ -3451,8 +3578,16 @@ function buildNivoraAIContext() {
                 ? appState.sales
                 : [],
 
-            baki: Array.isArray(appState.baki)
-                ? appState.baki
+            products: Array.isArray(appState.products)
+                ? appState.products
+                : [],
+
+            financeRecords: Array.isArray(appState.financeRecords)
+                ? appState.financeRecords
+                : [],
+
+            baki: Array.isArray(appState.customers)
+                ? appState.customers
                 : [],
 
             cart: Array.isArray(appState.cart)
@@ -4216,6 +4351,11 @@ function initializeNivoraAI() {
             updateCartBadge(); 
             startLiveClock();
             renderBusinessRadar();
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("/sw.js").catch(function(error) {
+                    console.warn("NIVORA offline install support skipped:", error);
+                });
+            }
         });
     </script>
 </body>
